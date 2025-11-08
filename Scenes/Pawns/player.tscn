@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=3 uid="uid://82egl20vpf7n"]
+[gd_scene load_steps=7 format=3 uid="uid://82egl20vpf7n"]
 
 [ext_resource type="Script" uid="uid://brhhotcc8gfs3" path="res://Scripts/Pawns/Characters/player.gd" id="1_cghlj"]
 [ext_resource type="Texture2D" uid="uid://ctc1loatxmgd3" path="res://Graphics/Pawns/ow325orhzy131.webp" id="2_tlhq4"]
@@ -6,7 +6,10 @@
 [ext_resource type="Script" uid="uid://l4teq1kjwlso" path="res://Scripts/Pawns/Characters/character_skin.gd" id="3_tlhq4"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://c050x5reelfn" path="res://Resources/Animations/base_chara_animtree.tres" id="4_5pnro"]
 
-[node name="Astronaut" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tlhq4"]
+size = Vector2(77, 155)
+
+[node name="Astronaut" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_cghlj")
 
 [node name="Skin" type="Sprite2D" parent="."]
@@ -35,3 +38,7 @@ parameters/StateMachine/Idle/blend_position = Vector2(0, 1)
 parameters/StateMachine/Walk0/blend_position = Vector2(0, 1)
 parameters/StateMachine/Walk1/blend_position = Vector2(0, 1)
 parameters/TimeScale/scale = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-2.5, -5.5)
+shape = SubResource("RectangleShape2D_tlhq4")
