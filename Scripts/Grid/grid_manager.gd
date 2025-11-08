@@ -20,3 +20,8 @@ func request_actor(pawn: Node2D, direction: Vector2i) -> void:
 
 func request_event(pawn: Node2D, direction: Vector2i) -> void:
 	event_grid.request_event(pawn, direction)
+
+func remove_pawn_from_grid(pawn: Node2D) -> void:
+	# Remove pawn from both grids
+	actor_grid.remove_pawn(pawn)
+	event_grid.remove_pawn(pawn)

@@ -66,3 +66,14 @@ func update_pawn_pos(pawn_type: int, cell_start: Vector2i, cell_target: Vector2i
 	if pawn_coords.has(cell_start):
 		pawn_coords[cell_target] = pawn_coords[cell_start]
 		pawn_coords.erase(cell_start)
+
+func remove_pawn(pawn: Node2D) -> void:
+	# Find and remove the pawn from the grid
+	var pawn_pos: Vector2i = local_to_map(pawn.position)
+	
+	# Clear the cell
+	set_cell(pawn_pos, EMPTY, Vector2i.ZERO)
+	
+	# Remove from pawn_coords dictionary
+	if pawn_coords.has(pawn_pos):
+		pawn_coords.erase(pawn_pos)

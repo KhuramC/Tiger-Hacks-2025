@@ -43,6 +43,11 @@ func update_health_bar() -> void:
 
 func die() -> void:
 	print(name, "has died")
+	
+	# Remove from grid system before freeing
+	if Grid and Grid.has_method("remove_pawn_from_grid"):
+		Grid.remove_pawn_from_grid(self)
+	
 	queue_free()  # You can replace this with respawn logic later
 
 func can_move() -> bool:

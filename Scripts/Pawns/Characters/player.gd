@@ -24,6 +24,9 @@ func _ready():
 	health = max_health
 	update_health_bar()
 	print("Player ready with full health:", health)
+	
+	# Create sword visual
+	_create_sword_visual()
 
 var move_tween: Tween
 var is_moving: bool = false
@@ -31,6 +34,9 @@ var is_talking: bool = false
 
 @onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 @onready var Grid: Node2D = get_parent()
+
+var sword_visual: Line2D  # Visual sword that appears during attack
+var attack_tween: Tween
 
 const MOVEMENTS: Dictionary = {
 	'ui_up': Vector2i.UP,
@@ -63,6 +69,11 @@ func update_health_bar() -> void:
 
 func die() -> void:
 	print(name, "has died")
+	
+	# Remove from grid system before freeing
+	if Grid and Grid.has_method("remove_pawn_from_grid"):
+		Grid.remove_pawn_from_grid(self)
+	
 	queue_free()  # You can replace this with respawn logic later
 
 func can_move() -> bool:
@@ -108,13 +119,13 @@ func set_talking(talk_state: bool) -> void:
 func _process(_delta) -> void:
 	input_priority()
 	
+	# Check for attack input (Space key) - can attack while moving
+	if Input.is_action_just_pressed("ui_select"):
+		attack()
+	
 	if can_move():
 		if Input.is_action_just_pressed("ui_accept"):
 			Grid.request_actor(self, cur_direction) # To Request dialogue
-		
-		# Check for attack input (Space key)
-		if Input.is_action_just_pressed("ui_select"):
-			attack()
 		
 		# Check for movement - both initial press and held keys
 		var pressed_direction: Vector2i = Vector2i.ZERO
@@ -182,7 +193,19 @@ func play_idle_animation() -> void:
 	elif cur_direction == Vector2i.RIGHT:
 		animated_sprite.animation = "idle_right"
 
+func _create_sword_visual() -> void:
+	# Create a Line2D to represent the sword
+	sword_visual = Line2D.new()
+	sword_visual.width = 3.0
+	sword_visual.default_color = Color(0.8, 0.8, 0.9, 1.0)  # Light gray/white sword color
+	sword_visual.visible = false
+	sword_visual.z_index = 10  # Make sure it appears above other sprites
+	add_child(sword_visual)
+
 func attack() -> void:
+	# Show sword animation
+	_show_sword_animation()
+	
 	# Get the actor grid to check for NPCs in the facing direction
 	var actor_grid = Grid.actor_grid
 	if not actor_grid:
@@ -202,3 +225,52 @@ func attack() -> void:
 			elif target.has_method("trigger_event"):
 				# If it's an event NPC, trigger it instead
 				target.trigger_event(cur_direction)
+
+func _show_sword_animation() -> void:
+	if not sword_visual:
+		return
+	
+	# Calculate sword position and direction based on facing direction
+	var sword_length: float = 24.0  # Length of the sword
+	var start_pos: Vector2 = Vector2.ZERO
+	var end_pos: Vector2 = Vector2.ZERO
+	
+	match cur_direction:
+		Vector2i.UP:
+			start_pos = Vector2(0, -8)  # Start from character center
+			end_pos = Vector2(0, -8 - sword_length)  # Extend upward
+		Vector2i.DOWN:
+			start_pos = Vector2(0, -8)
+			end_pos = Vector2(0, -8 + sword_length)  # Extend downward
+		Vector2i.LEFT:
+			start_pos = Vector2(0, -8)
+			end_pos = Vector2(-sword_length, -8)  # Extend left
+		Vector2i.RIGHT:
+			start_pos = Vector2(0, -8)
+			end_pos = Vector2(sword_length, -8)  # Extend right
+	
+	# Set the line points
+	sword_visual.clear_points()
+	sword_visual.add_point(start_pos)
+	sword_visual.add_point(end_pos)
+	
+	# Show the sword
+	sword_visual.visible = true
+	
+	# Animate the sword appearing and disappearing
+	if attack_tween:
+		attack_tween.kill()
+	
+	attack_tween = create_tween()
+	attack_tween.set_parallel(true)
+	
+	# Fade in quickly
+	sword_visual.modulate.a = 0.0
+	attack_tween.tween_property(sword_visual, "modulate:a", 1.0, 0.05)
+	
+	# Fade out after a short time
+	attack_tween.tween_callback(func(): sword_visual.modulate.a = 1.0).set_delay(0.1)
+	attack_tween.tween_property(sword_visual, "modulate:a", 0.0, 0.1).set_delay(0.1)
+	
+	# Hide after animation
+	attack_tween.tween_callback(func(): sword_visual.visible = false).set_delay(0.2)
