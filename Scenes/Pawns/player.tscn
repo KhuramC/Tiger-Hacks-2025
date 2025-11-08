@@ -10,8 +10,8 @@
 script = ExtResource("1_cghlj")
 
 [node name="Skin" type="Sprite2D" parent="."]
-position = Vector2(-57, -86)
-scale = Vector2(0.86549705, 0.9270833)
+position = Vector2(-11, -15)
+scale = Vector2(0.171875, 0.15898071)
 texture = ExtResource("2_tlhq4")
 centered = false
 offset = Vector2(0, -8)
