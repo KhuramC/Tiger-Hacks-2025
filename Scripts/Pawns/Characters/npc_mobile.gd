@@ -7,6 +7,11 @@ var is_stopped: bool = false
 
 @onready var move_max: int = move_pattern.size()
 
+func _ready():
+	# This calls the Character.gd's _ready() function, which runs update_health_bar().
+	# This connects the 'health' and 'max_health' values to the $HealthBar node.
+	super._ready()
+
 func _process(_delta) -> void:
 	if is_stopped:
 		return
