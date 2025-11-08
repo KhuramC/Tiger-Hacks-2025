@@ -77,10 +77,9 @@ func _move_tween_done() -> void:
 	
 	if held_direction != Vector2i.ZERO:
 		cur_direction = held_direction
-		set_animation_direction(held_direction)
 		var target_position: Vector2i = Grid.request_move(self, held_direction)
 		if target_position:
-			move_to(target_position)
+			move_to(target_position)  # This will set walk animation
 		else:
 			play_idle_animation()
 	else:
@@ -109,13 +108,15 @@ func _process(_delta) -> void:
 		# If a direction is pressed, try to move
 		if pressed_direction != Vector2i.ZERO:
 			cur_direction = pressed_direction
-			set_animation_direction(pressed_direction)
 			
 			# Try to move (will be handled in _move_tween_done if already moving)
 			if not is_moving:
+				# Set direction and try to move
+				set_animation_direction(pressed_direction)  # Set idle animation first
 				var target_position: Vector2i = Grid.request_move(self, pressed_direction)
 				if target_position:
-					move_to(target_position)
+					move_to(target_position)  # This will set walk animation
+			# If already moving, don't override the walk animation
 
 func input_priority() -> void:
 	# Input priority system, prioritize the latest inputs
