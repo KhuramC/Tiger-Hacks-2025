@@ -117,7 +117,7 @@ func place_entrances(possible_locations_by_quadrant: Dictionary, num_entrances: 
 		print("Could not place all entrances. Placed: %d/%d" % [entrances_placed, num_entrances])
 
 func _generate_entrances(num_entrances: int = NUM_ENTRANCES) -> void:
-	var lower_layer: TileMapLayer = get_node("../Lower")
+	var lower_layer: TileMapLayer = get_node("../Lower2")
 	var upper_layer: TileMapLayer = get_node("../Upper")
 	var lower_rect: Rect2i = lower_layer.get_used_rect()
 	var upper_rect: Rect2i = upper_layer.get_used_rect()

@@ -6,6 +6,7 @@ extends Pawn
 @export var target_map_scene: PackedScene
 @export var location_type: Globals.LOCATION_TYPES = Globals.LOCATION_TYPES.HEADQUARTERS
 const TILE_SIZE: int = Globals.TILE_SIZE
+const NUM_TILES: int = 4
 
 func _ready() -> void:
 	# Entrances are its own type
@@ -16,15 +17,15 @@ func _ready() -> void:
 	# match sprite based on location type
 	match location_type:
 		Globals.LOCATION_TYPES.HEADQUARTERS:
-			sprite.region_rect = Rect2(144, 144, 3 * TILE_SIZE, 3 * TILE_SIZE)
+			sprite.region_rect = Rect2(16*TILE_SIZE, 21*TILE_SIZE, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.SPACE_BAR:
-			sprite.region_rect = Rect2(240, 144, 3 * TILE_SIZE, 3 * TILE_SIZE)
+			sprite.region_rect = Rect2(240, 144, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.GAS_GIANT:
-			sprite.region_rect = Rect2(144, 192, 3 * TILE_SIZE, 3 * TILE_SIZE)
+			sprite.region_rect = Rect2(144, 192, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.HOT_PLANET:
-			sprite.region_rect = Rect2(192, 192, 3 * TILE_SIZE, 3 * TILE_SIZE)
+			sprite.region_rect = Rect2(192, 192, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.SATURN_LIKE:
-			sprite.region_rect = Rect2(192, 192, 3 * TILE_SIZE, 3 * TILE_SIZE)
+			sprite.region_rect = Rect2(192, 192, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 
 
 # Called when an actor interacts with this entrance
