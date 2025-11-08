@@ -7,7 +7,7 @@
 [ext_resource type="AnimationNodeBlendTree" uid="uid://c050x5reelfn" path="res://Resources/Animations/base_chara_animtree.tres" id="4_5pnro"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_tlhq4"]
-size = Vector2(77, 155)
+size = Vector2(22, 30)
 
 [node name="Astronaut" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_cghlj")
@@ -40,5 +40,7 @@ parameters/StateMachine/Walk1/blend_position = Vector2(0, 1)
 parameters/TimeScale/scale = 1.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(-2.5, -5.5)
+position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_tlhq4")
+
+[node name="Camera2D" type="Camera2D" parent="."]
