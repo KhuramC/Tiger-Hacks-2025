@@ -1,0 +1,9 @@
+class_name Globals
+
+enum LOCATION_TYPES {
+	HEADQUARTERS,
+	SPACE_STATION,
+	SPACE_BAR,
+	GAS_GIANT,
+	MOON,
+}

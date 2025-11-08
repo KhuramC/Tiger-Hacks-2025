@@ -1,7 +1,7 @@
 class_name PawnGrid
 extends TileMapLayer
 
-enum {EMPTY = -1, ACTOR, OBSTACLE, EVENT}
+enum {EMPTY = -1, ACTOR, OBSTACLE, EVENT, ENTRANCE}
 
 var pawn_grid: Node
 var pawn_coords: Dictionary[Vector2i, Pawn]
