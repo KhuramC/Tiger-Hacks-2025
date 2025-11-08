@@ -7,6 +7,7 @@
 [ext_resource type="Script" uid="uid://xomynkd34bug" path="res://Scripts/Pawns/Types/event.gd" id="7_8j5fh"]
 [ext_resource type="Script" uid="uid://bj8jwjinv8rn8" path="res://Scripts/Pawns/Types/object.gd" id="7_ay8ee"]
 [ext_resource type="PackedScene" uid="uid://dtegylvkm78fs" path="res://Scenes/Pawns/npc.tscn" id="7_wbuet"]
+[ext_resource type="PackedScene" uid="uid://c8hq1w2p3n4r5" path="res://Scenes/Pawns/barback.tscn" id="8_barback"]
 [ext_resource type="Texture2D" uid="uid://dat1j08ekvs87" path="res://Graphics/Tilesets/space_tileset.png" id="8_n2sjt"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_tg86c"]
@@ -3747,6 +3748,9 @@ type = 2
 
 [node name="NPC" parent="Pawns" instance=ExtResource("7_wbuet")]
 position = Vector2(392, 152)
+
+[node name="Barback" parent="Pawns" instance=ExtResource("8_barback")]
+position = Vector2(264, 152)
 
 [node name="Upper" type="TileMapLayer" parent="." groups=["Tilemap"]]
 tile_map_data = PackedByteArray("AAADAAgAAwAYAAcAAAAEAAgAAwAZAAcAAAAFAAgAAwAZAAcAAAAGAAgAAwAaAAcAAAAXAAcAAwAYAAAAAAAYAAcAAwAZAAAAAAAZAAcAAwAaAAAAAAAHABEAAwAaAAMAAAAIABEAAwAaAAMAAAAJABEAAwAaAAMAAAAKABEAAwAaAAMAAAALABEAAwAaAAMAAAAMABEAAwAaAAMAAAANABEAAwAaAAMAAAAOABEAAwAaAAMAAAAPABEAAwAaAAMAAAAQABEAAwAaAAMAAAARABEAAwAaAAMAAAASABEAAwAaAAMAAAATABEAAwAaAAMAAAAUABEAAwAaAAMAAAAGABEAAwAaAAMAAAAFABEAAwAaAAMAAAAEABEAAwAaAAMAAAADABEAAwAZAAMAAAAVABEAAwAaAAMAAAAWABEAAwAaAAMAAAAXABEAAwAaAAMAAAAYABEAAwAaAAMAAAAZABEAAwAaAAMAAAAaABEAAwAaAAMAAAAbABEAAwAaAAMAAAAcABEAAwAbAAMAAAAEAAcAAwAZAAYAAAAFAAcAAwAZAAYAAAADAAcAAwAYAAYAAAAGAAcAAwAaAAYAAAAXAAUAAwASAA4AAAAXAAYAAwASAA8AAAAYAAUAAwATAA4AAAAYAAYAAwATAA8AAAAZAAUAAwAUAA4AAAAZAAYAAwAUAA8AAAA=")
