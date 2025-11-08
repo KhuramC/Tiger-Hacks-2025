@@ -9,4 +9,4 @@ script = ExtResource("1_evvsf")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_ktwmr")
 region_enabled = true
-region_rect = Rect2(143, 143, 3*TILE_SIZE, 3*TILE_SIZE)
+region_rect = Rect2(143, 143, 48, 48)
