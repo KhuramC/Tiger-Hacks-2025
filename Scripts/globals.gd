@@ -1,9 +1,11 @@
 class_name Globals
 
+const TILE_SIZE = 16
+
 enum LOCATION_TYPES {
 	HEADQUARTERS,
-	SPACE_STATION,
 	SPACE_BAR,
 	GAS_GIANT,
-	MOON,
+	HOT_PLANET,
+	SATURN_LIKE
 }
