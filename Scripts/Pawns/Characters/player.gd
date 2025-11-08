@@ -7,10 +7,23 @@ enum CELL_TYPES{ ACTOR, OBSTACLE, EVENT }
 # Character properties
 @export var speed: float = 1.0
 @export var move_duration: float = 0.2  # Duration in seconds to move one tile
+@export var attack_damage: int = 10  # Damage dealt per attack
 
 var max_health: int = 100
 var health: int = max_health
-@onready var health_bar: ProgressBar = $HealthBar
+var health_bar: ProgressBar  # Health bar node (can be named "HealthBar" or "ProgressBar")
+
+func _ready():
+	# Try to find health bar with either name
+	if has_node("HealthBar"):
+		health_bar = $HealthBar
+	elif has_node("ProgressBar"):
+		health_bar = $ProgressBar
+	
+	# Ensure health starts full
+	health = max_health
+	update_health_bar()
+	print("Player ready with full health:", health)
 
 var move_tween: Tween
 var is_moving: bool = false
@@ -29,16 +42,19 @@ const MOVEMENTS: Dictionary = {
 var input_history: Array[String] = []
 var cur_direction: Vector2i = Vector2i.DOWN
 
-func _ready():
-	# Ensure health starts full
-	health = max_health
-	update_health_bar()
-	print("Player ready with full health:", health)
 
 func heal(amount: int) -> void:
 	health += amount
 	health = clamp(health, 0, max_health)
 	update_health_bar()
+
+func take_damage(amount: int) -> void:
+	health -= amount
+	health = clamp(health, 0, max_health)
+	update_health_bar()
+	
+	if health <= 0:
+		die()
 
 func update_health_bar() -> void:
 	if health_bar:
@@ -95,6 +111,10 @@ func _process(_delta) -> void:
 	if can_move():
 		if Input.is_action_just_pressed("ui_accept"):
 			Grid.request_actor(self, cur_direction) # To Request dialogue
+		
+		# Check for attack input (Space key)
+		if Input.is_action_just_pressed("ui_select"):
+			attack()
 		
 		# Check for movement - both initial press and held keys
 		var pressed_direction: Vector2i = Vector2i.ZERO
@@ -161,3 +181,24 @@ func play_idle_animation() -> void:
 		animated_sprite.animation = "idle_left"
 	elif cur_direction == Vector2i.RIGHT:
 		animated_sprite.animation = "idle_right"
+
+func attack() -> void:
+	# Get the actor grid to check for NPCs in the facing direction
+	var actor_grid = Grid.actor_grid
+	if not actor_grid:
+		return
+	
+	# Get the cell data in the direction the player is facing
+	var cell: Dictionary = actor_grid.get_cell_data(position, cur_direction)
+	
+	# Check if there's an actor in that cell
+	if cell.target_type == actor_grid.ACTOR:
+		var target = actor_grid.get_cell_pawn(cell.target)
+		if target:
+			# Check if target has take_damage method (Character or NPC_Mobile)
+			if target.has_method("take_damage"):
+				target.take_damage(attack_damage)
+				print("Player attacked ", target.name, " for ", attack_damage, " damage!")
+			elif target.has_method("trigger_event"):
+				# If it's an event NPC, trigger it instead
+				target.trigger_event(cur_direction)

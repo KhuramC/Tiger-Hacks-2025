@@ -6,7 +6,15 @@ extends Pawn
 
 var max_health: int = 100
 var health: int = max_health
-@onready var health_bar: ProgressBar = $HealthBar
+var health_bar: ProgressBar  # Health bar node (can be named "HealthBar" or "ProgressBar")
+
+func _ready():
+	# Try to find health bar with either name
+	if has_node("HealthBar"):
+		health_bar = $HealthBar
+	elif has_node("ProgressBar"):
+		health_bar = $ProgressBar
+	update_health_bar()
 
 var move_tween: Tween
 var is_moving: bool = false
@@ -15,13 +23,18 @@ var is_talking: bool = false
 @onready var chara_skin: Sprite2D = $Skin
 @onready var Grid: Node2D = get_parent()
 
-func _ready():
-	update_health_bar()
-
 func heal(amount: int) -> void:
 	health += amount
 	health = clamp(health, 0, max_health)
 	update_health_bar()
+
+func take_damage(amount: int) -> void:
+	health -= amount
+	health = clamp(health, 0, max_health)
+	update_health_bar()
+	
+	if health <= 0:
+		die()
 
 func update_health_bar() -> void:
 	if health_bar:
