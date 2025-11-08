@@ -3,7 +3,7 @@ extends Sprite2D
 var switch_walk: bool = false
 
 @onready var animation_tree: AnimationTree = $AnimationTree
-@onready var walk_length: float = $AnimationPlayer.get_animation("walk_down").length
+@onready var walk_length: float = $AnimationPlayer.get_animation("Walk_down").length
 
 func set_animation_speed(value: float) -> void:
 	animation_tree.set("parameters/TimeScale/scale", value)
