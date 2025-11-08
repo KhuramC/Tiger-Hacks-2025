@@ -203,61 +203,97 @@ func _create_sword_visual() -> void:
 	add_child(sword_visual)
 
 func attack() -> void:
-	# Show sword animation
-	_show_sword_animation()
+	# Show sword swing animation
+	_show_sword_swing_animation()
 	
-	# Get the actor grid to check for NPCs in the facing direction
+	# Get the actor grid to check for NPCs in the swing area
 	var actor_grid = Grid.actor_grid
 	if not actor_grid:
 		return
 	
-	# Get the cell data in the direction the player is facing
-	var cell: Dictionary = actor_grid.get_cell_data(position, cur_direction)
-	
-	# Check if there's an actor in that cell
-	if cell.target_type == actor_grid.ACTOR:
-		var target = actor_grid.get_cell_pawn(cell.target)
-		if target:
-			# Check if target has take_damage method (Character or NPC_Mobile)
-			if target.has_method("take_damage"):
-				target.take_damage(attack_damage)
-				print("Player attacked ", target.name, " for ", attack_damage, " damage!")
-			elif target.has_method("trigger_event"):
-				# If it's an event NPC, trigger it instead
-				target.trigger_event(cur_direction)
-
-func _show_sword_animation() -> void:
-	if not sword_visual:
-		return
-	
-	# Calculate sword position and direction based on facing direction
-	var sword_length: float = 24.0  # Length of the sword
-	var start_pos: Vector2 = Vector2.ZERO
-	var end_pos: Vector2 = Vector2.ZERO
+	# Swing hits multiple cells: primary direction and diagonally adjacent (90-degree arc in front)
+	# Hits the cell directly in front and cells diagonally in front (left and right of front cell)
+	var attack_directions: Array[Vector2i] = []
 	
 	match cur_direction:
 		Vector2i.UP:
-			start_pos = Vector2(0, -8)  # Start from character center
-			end_pos = Vector2(0, -8 - sword_length)  # Extend upward
+			# Hit directly up, and diagonally up-left and up-right
+			attack_directions = [Vector2i.UP, Vector2i.UP + Vector2i.LEFT, Vector2i.UP + Vector2i.RIGHT]
 		Vector2i.DOWN:
-			start_pos = Vector2(0, -8)
-			end_pos = Vector2(0, -8 + sword_length)  # Extend downward
+			# Hit directly down, and diagonally down-left and down-right
+			attack_directions = [Vector2i.DOWN, Vector2i.DOWN + Vector2i.LEFT, Vector2i.DOWN + Vector2i.RIGHT]
 		Vector2i.LEFT:
-			start_pos = Vector2(0, -8)
-			end_pos = Vector2(-sword_length, -8)  # Extend left
+			# Hit directly left, and diagonally left-up and left-down
+			attack_directions = [Vector2i.LEFT, Vector2i.LEFT + Vector2i.UP, Vector2i.LEFT + Vector2i.DOWN]
 		Vector2i.RIGHT:
-			start_pos = Vector2(0, -8)
-			end_pos = Vector2(sword_length, -8)  # Extend right
+			# Hit directly right, and diagonally right-up and right-down
+			attack_directions = [Vector2i.RIGHT, Vector2i.RIGHT + Vector2i.UP, Vector2i.RIGHT + Vector2i.DOWN]
 	
-	# Set the line points
+	# Check all cells in the swing arc
+	for attack_dir in attack_directions:
+		var cell: Dictionary = actor_grid.get_cell_data(position, attack_dir)
+		
+		# Check if there's an actor in that cell
+		if cell.target_type == actor_grid.ACTOR:
+			var target = actor_grid.get_cell_pawn(cell.target)
+			if target and target != self:  # Don't hit yourself
+				# Check if target has take_damage method (Character or NPC_Mobile)
+				if target.has_method("take_damage"):
+					target.take_damage(attack_damage)
+					print("Player attacked ", target.name, " for ", attack_damage, " damage!")
+				elif target.has_method("trigger_event"):
+					# If it's an event NPC, trigger it instead
+					target.trigger_event(cur_direction)
+
+func _show_sword_swing_animation() -> void:
+	if not sword_visual:
+		return
+	
+	# Calculate sword for swing animation
+	var sword_length: float = 24.0  # Length of the sword
+	var start_pos: Vector2 = Vector2(0, -8)  # Start from character center
+	
+	# Set initial sword position (straight line pointing in direction)
 	sword_visual.clear_points()
 	sword_visual.add_point(start_pos)
-	sword_visual.add_point(end_pos)
+	
+	# Calculate swing arc based on direction (swing from one side to the other in front)
+	# Always set the line to point straight in the facing direction, then rotate through the arc
+	var rotation_start: float = 0.0
+	var rotation_end: float = 0.0
+	var swing_arc: float = PI / 2  # 90-degree swing
+	
+	match cur_direction:
+		Vector2i.UP:
+			# Swing from left to right in front (up-left to up-right)
+			# Line points straight up, rotate from -45° to +45° relative to up
+			rotation_start = -PI / 4  # Start 45° to the left of up
+			rotation_end = PI / 4  # End 45° to the right of up
+			sword_visual.add_point(start_pos + Vector2(0, -sword_length))  # Point straight up
+		Vector2i.DOWN:
+			# Swing from left to right in front (down-left to down-right)
+			# Line points straight down, rotate from -45° to +45° relative to down
+			rotation_start = -PI / 4  # Start 45° to the left of down
+			rotation_end = PI / 4  # End 45° to the right of down
+			sword_visual.add_point(start_pos + Vector2(0, sword_length))  # Point straight down
+		Vector2i.LEFT:
+			# Swing from top to bottom in front (left-up to left-down)
+			# Line points straight left, rotate from -45° to +45° relative to left
+			rotation_start = -PI / 4  # Start 45° above left
+			rotation_end = PI / 4  # End 45° below left
+			sword_visual.add_point(start_pos + Vector2(-sword_length, 0))  # Point straight left
+		Vector2i.RIGHT:
+			# Swing from top to bottom in front (right-up to right-down)
+			# Line points straight right, rotate from -45° to +45° relative to right
+			rotation_start = -PI / 4  # Start 45° above right
+			rotation_end = PI / 4  # End 45° below right
+			sword_visual.add_point(start_pos + Vector2(sword_length, 0))  # Point straight right
 	
 	# Show the sword
 	sword_visual.visible = true
+	sword_visual.rotation = rotation_start
 	
-	# Animate the sword appearing and disappearing
+	# Animate the sword swinging
 	if attack_tween:
 		attack_tween.kill()
 	
@@ -268,9 +304,11 @@ func _show_sword_animation() -> void:
 	sword_visual.modulate.a = 0.0
 	attack_tween.tween_property(sword_visual, "modulate:a", 1.0, 0.05)
 	
-	# Fade out after a short time
-	attack_tween.tween_callback(func(): sword_visual.modulate.a = 1.0).set_delay(0.1)
-	attack_tween.tween_property(sword_visual, "modulate:a", 0.0, 0.1).set_delay(0.1)
+	# Rotate the sword through the swing arc (swing from one side to the other)
+	attack_tween.tween_property(sword_visual, "rotation", rotation_end, 0.15)
+	
+	# Fade out after swing
+	attack_tween.tween_property(sword_visual, "modulate:a", 0.0, 0.1).set_delay(0.15)
 	
 	# Hide after animation
-	attack_tween.tween_callback(func(): sword_visual.visible = false).set_delay(0.2)
+	attack_tween.tween_callback(func(): sword_visual.visible = false; sword_visual.rotation = 0.0).set_delay(0.25)
