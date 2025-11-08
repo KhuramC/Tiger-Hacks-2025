@@ -10,6 +10,16 @@ const MOVEMENTS: Dictionary = {
 var input_history: Array[String] = []
 var cur_direction: Vector2i = Vector2i.DOWN
 
+func _ready():
+	# Call Character.gd’s _ready() first so it sets up the health bar
+	super._ready()
+
+	# Ensure health starts full
+	health = max_health
+	update_health_bar()
+
+	print("Player ready with full health:", health)
+
 func _process(_delta) -> void:
 	input_priority()
 	
