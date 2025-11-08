@@ -1093,7 +1093,7 @@ script = ExtResource("3_1njb8")
 
 [node name="Player" parent="Pawns" instance=ExtResource("4_nyxsb")]
 position = Vector2(392, 128)
-speed = 2.0
+speed = 5.0
 
 [node name="Camera2D" type="Camera2D" parent="Pawns/Player"]
 position = Vector2(0, 8)
