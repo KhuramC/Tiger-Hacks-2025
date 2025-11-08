@@ -17,13 +17,13 @@ func _ready() -> void:
 	# match sprite based on location type
 	match location_type:
 		Globals.LOCATION_TYPES.HEADQUARTERS:
-			sprite.region_rect = Rect2(16*TILE_SIZE, 21*TILE_SIZE, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
+			sprite.region_rect = Rect2(120, 120, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.SPACE_BAR:
-			sprite.region_rect = Rect2(240, 144, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
+			sprite.region_rect = Rect2(144, 144, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.GAS_GIANT:
-			sprite.region_rect = Rect2(144, 192, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
+			sprite.region_rect = Rect2(240, 240, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.HOT_PLANET:
-			sprite.region_rect = Rect2(192, 192, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
+			sprite.region_rect = Rect2(84, 84, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 		Globals.LOCATION_TYPES.SATURN_LIKE:
 			sprite.region_rect = Rect2(192, 192, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
 
