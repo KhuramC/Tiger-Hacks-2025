@@ -10,13 +10,25 @@ var health: int = max_health
 var move_tween: Tween
 var is_moving: bool = false
 var is_talking: bool = false
-
+@onready var Grid: Node2D = get_parent() 
 @onready var chara_skin: Sprite2D = $Skin
-@onready var Grid: Node2D = get_parent()
 
 func _ready():
 	update_health_bar()
 
+#func damage(amount: int) -> void:
+	#"""Applies damage, clamps health, updates bar, and checks for death."""
+	#health -= amount
+	#
+	## Ensure health stays within 0 and max_health bounds
+	#health = clamp(health, 0, max_health)
+	#
+	## Update the progress bar visual
+	#update_health_bar()
+	#
+	#if health <= 0:
+		#die()
+		
 func heal(amount: int) -> void:
 	health += amount
 	health = clamp(health, 0, max_health)

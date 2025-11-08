@@ -17,6 +17,12 @@ func request_move(pawn: Pawn, direction: Vector2i) -> Vector2i:
 
 func request_actor(pawn: Pawn, direction: Vector2i) -> void:
 	actor_grid.request_event(pawn, direction)
+func request_damage(attacker: Character, direction: Vector2i, damage_amount: int) -> bool:
+	"""
+	Delegates the damage request to the actor_grid (which manages all characters).
+	The actor_grid will check the target cell and apply damage if an NPC is found.
+	"""
+	return actor_grid.request_damage(attacker, direction, damage_amount)
 
 func request_event(pawn: Pawn, direction: Vector2i) -> void:
 	event_grid.request_event(pawn, direction)
