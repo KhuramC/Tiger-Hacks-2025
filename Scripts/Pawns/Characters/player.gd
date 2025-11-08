@@ -1,71 +1,42 @@
-extends Character
+extends CharacterBody2D
 
-const MOVEMENTS: Dictionary = {
-	'ui_up': Vector2i.UP,
-	'ui_left': Vector2i.LEFT,
-	'ui_right': Vector2i.RIGHT,
-	'ui_down': Vector2i.DOWN
-}
 
-var input_history: Array[String] = []
-var cur_direction: Vector2i = Vector2i.DOWN
+const SPEED = 130.0
+const JUMP_VELOCITY = -300.0
 
-func _ready():
-	# Call Character.gd’s _ready() first so it sets up the health bar
-	super._ready()
+@onready var animated_sprite: AnimatedSprite2D = $AnimatedSprite2D
 
-	# Ensure health starts full
-	health = max_health
-	update_health_bar()
+func _physics_process(delta: float) -> void:
+	# Add the gravity.
+	if not is_on_floor():
+		velocity += get_gravity() * delta
 
-	print("Player ready with full health:", health)
+	# Handle jump.
+	if Input.is_action_just_pressed("jump") and is_on_floor():
+		velocity.y = JUMP_VELOCITY
 
-func _process(_delta) -> void:
-	input_priority()
+	# Get the input direction: -1, 0, 1
+	var direction := Input.get_axis("move_left", "move_right")
 	
-	if can_move():
-		if Input.is_action_just_pressed("ui_accept"):
-			Grid.request_actor(self, cur_direction) # To Request dialogue
+	# Flip the sprite
+	if direction > 0:
+		animated_sprite.flip_h = false
+	elif direction < 0:
+		animated_sprite.flip_h = true
 		
-		var input_direction: Vector2i = set_direction()
-		if input_direction:
-			cur_direction = input_direction
-			chara_skin.set_animation_direction(input_direction)
+	# Play animations
+	if is_on_floor():
+		if direction == 0:
+			animated_sprite.play("idle")
+		else:
+			animated_sprite.play("run")
+	else:
+		animated_sprite.play("jump")
 			
-			# Checks if the next movement opportunity is possible, if it is move to target position
-			var target_position: Vector2i = Grid.request_move(self, input_direction)
-			if target_position:
-				move_to(target_position)
+	# Apply movement	
+	if direction:
+		velocity.x = direction * SPEED
+	else:
+		velocity.x = move_toward(velocity.x, 0, SPEED)
 
-func input_priority() -> void:
-	# Input priority system, prioritize the latest inputs
-	for direction in MOVEMENTS.keys():
-		if Input.is_action_just_released(direction):
-			var index: int = input_history.find(direction)
-			if index != -1:
-				input_history.remove_at(index)
-		
-		if Input.is_action_just_pressed(direction):
-			input_history.append(direction)
-
-func set_direction() -> Vector2i:
-	# Handles the movement direction depending on the inputs
-	var direction: Vector2i = Vector2i()
-	
-	if input_history.size():
-		for i in input_history:
-			direction += MOVEMENTS[i]
-		
-		match (input_history.back()):
-			'ui_right', 'ui_left': if direction.x != 0: direction.y = 0
-			'ui_up', 'ui_down': if direction.y != 0: direction.x = 0
-	
-	return direction
-
-func _move_tween_done() -> void:
-	Grid.request_event(self, Vector2i.ZERO) # Check if there's an event
-	super ()
-
-func set_talking(talk_state: bool) -> void:
-	is_talking = talk_state
-	if is_talking: input_history.clear()
+	move_and_slide()

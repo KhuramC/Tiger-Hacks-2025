@@ -1,37 +1,57 @@
-[gd_scene load_steps=6 format=3 uid="uid://82egl20vpf7n"]
+[gd_scene load_steps=9 format=3 uid="uid://82egl20vpf7n"]
 
 [ext_resource type="Script" uid="uid://brhhotcc8gfs3" path="res://Scripts/Pawns/Characters/player.gd" id="1_cghlj"]
-[ext_resource type="Texture2D" uid="uid://ctc1loatxmgd3" path="res://Graphics/Pawns/ow325orhzy131.webp" id="2_tlhq4"]
-[ext_resource type="AnimationLibrary" uid="uid://b3y87y7fcp23i" path="res://Resources/Animations/base_chara_anim.res" id="3_338dp"]
-[ext_resource type="Script" uid="uid://l4teq1kjwlso" path="res://Scripts/Pawns/Characters/character_skin.gd" id="3_tlhq4"]
-[ext_resource type="AnimationNodeBlendTree" uid="uid://c050x5reelfn" path="res://Resources/Animations/base_chara_animtree.tres" id="4_5pnro"]
+[ext_resource type="Texture2D" uid="uid://dej3syime1d4y" path="res://Graphics/Pawns/space_man_sprite.png" id="2_tlhq4"]
 
-[node name="Astronaut" type="Node2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_6qq7k"]
+size = Vector2(2.639205, 14.691493)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_338dp"]
+atlas = ExtResource("2_tlhq4")
+region = Rect2(0, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5pnro"]
+atlas = ExtResource("2_tlhq4")
+region = Rect2(64, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_tlhq4"]
+atlas = ExtResource("2_tlhq4")
+region = Rect2(128, 0, 64, 64)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s70le"]
+atlas = ExtResource("2_tlhq4")
+region = Rect2(192, 0, 64, 64)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_c5sun"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_338dp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5pnro")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_tlhq4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s70le")
+}],
+"loop": true,
+"name": &"default",
+"speed": 10.0
+}]
+
+[node name="Astronaut" type="CharacterBody2D"]
 script = ExtResource("1_cghlj")
 
-[node name="Skin" type="Sprite2D" parent="."]
-position = Vector2(-11, -15)
-scale = Vector2(0.171875, 0.15898071)
-texture = ExtResource("2_tlhq4")
-centered = false
-offset = Vector2(0, -8)
-hframes = 4
-vframes = 4
-frame = 7
-script = ExtResource("3_tlhq4")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0.49999616, 4.0000005)
+rotation = -3.1415925
+scale = Vector2(11.745962, -3.81173)
+shape = SubResource("RectangleShape2D_6qq7k")
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Skin"]
-root_node = NodePath("../..")
-libraries = {
-&"": ExtResource("3_338dp")
-}
-autoplay = "idle_down"
-
-[node name="AnimationTree" type="AnimationTree" parent="Skin"]
-root_node = NodePath("../..")
-tree_root = ExtResource("4_5pnro")
-anim_player = NodePath("../AnimationPlayer")
-parameters/StateMachine/Idle/blend_position = Vector2(0, 1)
-parameters/StateMachine/Walk0/blend_position = Vector2(0, 1)
-parameters/StateMachine/Walk1/blend_position = Vector2(0, 1)
-parameters/TimeScale/scale = 1.0
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_c5sun")
+autoplay = "default"
+frame_progress = 0.95890373
