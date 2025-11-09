@@ -1,7 +1,6 @@
 extends Character
 
-
-const SPEED = 1.0 # Adjust speed as needed
+const SPEED = 1000
 @export var move_pattern: Array[Vector2] = []
 var target_position: Vector2
 var is_moving_to_target: bool = false
