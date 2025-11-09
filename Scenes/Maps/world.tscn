@@ -1,13 +1,14 @@
-[gd_scene load_steps=15 format=4 uid="uid://cktlplg0urpum"]
+[gd_scene load_steps=14 format=4 uid="uid://cktlplg0urpum"]
 
 [ext_resource type="Texture2D" uid="uid://dd4o7n2bo12h" path="res://Graphics/Tilesets/tileset_dungeon.png" id="1_uo5tt"]
 [ext_resource type="Script" uid="uid://bmdlnbjwjkibt" path="res://Scripts/Grid/grid_manager.gd" id="3_1njb8"]
 [ext_resource type="Script" uid="uid://cdml4nqeq6ikm" path="res://Scenes/Maps/progress_bar.gd" id="3_n2sjt"]
-[ext_resource type="PackedScene" uid="uid://82egl20vpf7n" path="res://Scenes/Pawns/player.tscn" id="4_nyxsb"]
+[ext_resource type="PackedScene" uid="uid://cainbrrkw014d" path="res://Scenes/Pawns/player.tscn" id="4_nyxsb"]
 [ext_resource type="PackedScene" uid="uid://d3xeykecmo176" path="res://Scenes/Pawns/npc_mobile.tscn" id="5_ehxcq"]
 [ext_resource type="Script" uid="uid://xomynkd34bug" path="res://Scripts/Pawns/Types/event.gd" id="7_8j5fh"]
 [ext_resource type="Script" uid="uid://bj8jwjinv8rn8" path="res://Scripts/Pawns/Types/object.gd" id="7_ay8ee"]
 [ext_resource type="PackedScene" uid="uid://dtegylvkm78fs" path="res://Scenes/Pawns/npc.tscn" id="7_wbuet"]
+[ext_resource type="PackedScene" uid="uid://c8hq1w2p3n4r5" path="res://Scenes/Pawns/barback.tscn" id="8_barback"]
 [ext_resource type="Texture2D" uid="uid://dat1j08ekvs87" path="res://Graphics/Tilesets/space_tileset.png" id="8_n2sjt"]
 [ext_resource type="PackedScene" uid="uid://clstyis10h8wh" path="res://Scenes/Interactables/bar.tscn" id="10_py2g1"]
 
@@ -3719,10 +3720,16 @@ limit_top = -107
 limit_right = 819
 limit_bottom = 362
 
+[node name="ProgressBar" type="ProgressBar" parent="Pawns/Player"]
+offset_left = -1.0
+offset_top = -7.0
+offset_right = 3.0
+offset_bottom = 20.0
+script = ExtResource("3_n2sjt")
+
 [node name="NPC_Mobile" parent="Pawns" instance=ExtResource("5_ehxcq")]
 position = Vector2(72, 120)
 move_pattern = Array[Vector2i]([Vector2i(1, 0), Vector2i(1, 0), Vector2i(1, 0), Vector2i(0, -1), Vector2i(-1, 0), Vector2i(-1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, 0)])
-speed = 1.0
 
 [node name="ProgressBar" type="ProgressBar" parent="Pawns/NPC_Mobile"]
 offset_left = -1.0
@@ -3748,6 +3755,15 @@ type = 2
 
 [node name="NPC" parent="Pawns" instance=ExtResource("7_wbuet")]
 position = Vector2(392, 152)
+
+[node name="ProgressBar" type="ProgressBar" parent="Pawns/NPC"]
+offset_left = -1.0
+offset_top = -7.0
+offset_right = 3.0
+offset_bottom = 20.0
+script = ExtResource("3_n2sjt")
+[node name="Barback" parent="Pawns" instance=ExtResource("8_barback")]
+position = Vector2(264, 152)
 
 [node name="Upper" type="TileMapLayer" parent="." groups=["Tilemap"]]
 tile_map_data = PackedByteArray("AAADAAgAAwAYAAcAAAAEAAgAAwAZAAcAAAAFAAgAAwAZAAcAAAAGAAgAAwAaAAcAAAAXAAcAAwAYAAAAAAAYAAcAAwAZAAAAAAAZAAcAAwAaAAAAAAAHABEAAwAaAAMAAAAIABEAAwAaAAMAAAAJABEAAwAaAAMAAAAKABEAAwAaAAMAAAALABEAAwAaAAMAAAAMABEAAwAaAAMAAAANABEAAwAaAAMAAAAOABEAAwAaAAMAAAAPABEAAwAaAAMAAAAQABEAAwAaAAMAAAARABEAAwAaAAMAAAASABEAAwAaAAMAAAATABEAAwAaAAMAAAAUABEAAwAaAAMAAAAGABEAAwAaAAMAAAAFABEAAwAaAAMAAAAEABEAAwAaAAMAAAADABEAAwAZAAMAAAAVABEAAwAaAAMAAAAWABEAAwAaAAMAAAAXABEAAwAaAAMAAAAYABEAAwAaAAMAAAAZABEAAwAaAAMAAAAaABEAAwAaAAMAAAAbABEAAwAaAAMAAAAcABEAAwAbAAMAAAAEAAcAAwAZAAYAAAAFAAcAAwAZAAYAAAADAAcAAwAYAAYAAAAGAAcAAwAaAAYAAAAXAAUAAwASAA4AAAAXAAYAAwASAA8AAAAYAAUAAwATAA4AAAAYAAYAAwATAA8AAAAZAAUAAwAUAA4AAAAZAAYAAwAUAA8AAAA=")
