@@ -5,6 +5,7 @@ extends Area2D
 # Scene to load when this entrance is triggered
 @export var target_map_scene: PackedScene
 @export var location_type: Globals.LOCATION_TYPES = Globals.LOCATION_TYPES.HEADQUARTERS
+@export var id: int
 const TILE_SIZE: int = Globals.TILE_SIZE
 const location_names = Globals.location_names
 const NUM_TILES: int = 5
@@ -35,14 +36,17 @@ func _on_body_entered(body: CharacterBody2D) -> void:
 	
 	if body.is_in_group("player"):
 		print("SUCCESS: The body was in the 'player' group!")
+		Globals.player_last_galaxy_position = body.global_position
 		
 		match location_type:
 			Globals.LOCATION_TYPES.HEADQUARTERS:
 				print("Taking player to HQ!")
+				Globals.scene_manager.change_scene("res://Scenes/Interactables/hq_interior.tscn", id)
 			Globals.LOCATION_TYPES.SPACE_BAR:
 				print("Taking player to the bar!")
-				get_tree().change_scene_to_file("res://Scenes/Interactables/bar_interior.tscn")
+				Globals.scene_manager.change_scene("res://Scenes/Interactables/bar_interior.tscn", id)
 			Globals.LOCATION_TYPES.SATURN_LIKE:
 				print("Taking player to a saturn like planet!")
+				Globals.scene_manager.change_scene("res://Scenes/Interactables/saturn_interior.tscn", id)
 	else:
 		print("FAILURE: The body was NOT in the 'player' group.")
