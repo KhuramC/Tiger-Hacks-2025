@@ -1,4 +1,4 @@
-extends CharacterBody2D
+extends Character
 
 # This is the player's speed in pixels per second.
 # You can change this number to make the player faster or slower.

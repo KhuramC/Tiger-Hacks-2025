@@ -44,3 +44,6 @@ position = Vector2(0, -1)
 shape = SubResource("RectangleShape2D_tlhq4")
 
 [node name="Camera2D" type="Camera2D" parent="."]
+current = true
+drag_horizontal_enabled = true
+drag_vertical_enabled = true

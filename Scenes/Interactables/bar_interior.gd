@@ -1,4 +1,4 @@
-extends Area2D
+extends Node2D
 
 func _on_body_entered(body: Node2D) -> void:
 	# --- THIS IS THE CRITICAL DEBUG LINE ---

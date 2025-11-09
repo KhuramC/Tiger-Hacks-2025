@@ -6,7 +6,7 @@
 [ext_resource type="AnimationLibrary" uid="uid://b3y87y7fcp23i" path="res://Resources/Animations/base_chara_anim.res" id="4_qjmgd"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://c050x5reelfn" path="res://Resources/Animations/base_chara_animtree.tres" id="5_o87oo"]
 
-[node name="NPC" type="Node2D"]
+[node name="NPC" type="CharacterBody2D"]
 script = ExtResource("1_7fu36")
 
 [node name="Skin" type="Sprite2D" parent="."]

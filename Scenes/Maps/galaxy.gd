@@ -1,19 +1,18 @@
 extends Node2D
 
-enum {EMPTY = -1, ACTOR, OBSTACLE, EVENT, ENTRANCE}
+@onready var pawns_node: Node2D = $Pawns
+@onready var lower_layer: TileMapLayer = $Lower2
+@onready var tile_map_cell_size: Vector2i = Vector2i(16,16)
 
-var actor_grid: TileMapLayer = ActorGrid.new(self)
-var event_grid: TileMapLayer = EventGrid.new(self)
 
 const ENTRANCE_SCENE: PackedScene = preload("res://Scenes/Pawns/entrance.tscn")
-const NUM_ENTRANCES: int = 12
 const UNIQUE_LOCATIONS: Array = [Globals.LOCATION_TYPES.HEADQUARTERS, Globals.LOCATION_TYPES.SPACE_BAR]
-const REUSABLE_LOCATIONS: Array = [Globals.LOCATION_TYPES.GAS_GIANT, Globals.LOCATION_TYPES.HOT_PLANET, Globals.LOCATION_TYPES.SATURN_LIKE]
-
+const REUSABLE_LOCATIONS: Array = [Globals.LOCATION_TYPES.SATURN_LIKE] # add gas giant and hot planet later 
+const NUM_ENTRANCES: int = 12
+# Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	_initialize_grids()
-	await actor_grid.ready
-	_generate_entrances()
+	_generate_entrances(NUM_ENTRANCES)
+
 
 func _generate_location_types(num_entrances: int = NUM_ENTRANCES) -> Array:
 	var location_types = UNIQUE_LOCATIONS.duplicate()
@@ -25,13 +24,15 @@ func _generate_location_types(num_entrances: int = NUM_ENTRANCES) -> Array:
 	
 	return location_types
 
-func get_empty_cells(used_rect: Rect2i) -> Dictionary:
+func get_empty_cells(used_rect: Rect2i, lower_layer: TileMapLayer) -> Dictionary:
 	var empty_cells: Dictionary = {}
 	for x in range(used_rect.position.x, used_rect.end.x):
 		for y in range(used_rect.position.y, used_rect.end.y):
 			var pos = Vector2i(x, y)
-			if actor_grid.get_cell_source_id(pos) == EMPTY:
-				empty_cells[pos] = true
+			# A cell is empty if there's no tile in either the lower or upper layer
+			# if lower_layer.get_tile_data(0, pos) == null:
+			empty_cells[pos] = true
+	#print("Empty cells:", empty_cells)
 	return empty_cells
 
 func _get_possible_locations_in_quadrant(empty_cells: Dictionary, quadrants: Array[Rect2i]) -> Dictionary:
@@ -93,13 +94,14 @@ func place_entrances(possible_locations_by_quadrant: Dictionary, num_entrances: 
 		var grid_pos: Vector2i = locations_in_quadrant[random_index]
 
 		# Instantiate and place the entrance
-		var entrance: Node2D = ENTRANCE_SCENE.instantiate()
+		var entrance: Area2D = ENTRANCE_SCENE.instantiate()
 		entrance.location_type = location_types[i]
-		entrance.position = actor_grid.map_to_local(grid_pos)
-		entrance.z_index = -1
+		# entrance.id = i
+		entrance.position = (grid_pos * tile_map_cell_size) + (tile_map_cell_size / 2)
+		entrance.z_index = 0
 		add_child(entrance)
 		entrances_placed += 1
-		print("Placed entrance %d at %s in quadrant %d" % [entrances_placed, grid_pos, quadrant_index])
+		print("Placed entrance #%d of type %s at %s in quadrant %d" % [entrances_placed, Globals.location_names[entrance.location_type], grid_pos, quadrant_index])
 
 
 		# Remove the chosen location and any now-invalid (overlapping) locations from all quadrants
@@ -117,14 +119,11 @@ func place_entrances(possible_locations_by_quadrant: Dictionary, num_entrances: 
 		print("Could not place all entrances. Placed: %d/%d" % [entrances_placed, num_entrances])
 
 func _generate_entrances(num_entrances: int = NUM_ENTRANCES) -> void:
-	var lower_layer: TileMapLayer = get_node("../Lower2")
-	var upper_layer: TileMapLayer = get_node("../Upper")
-	var lower_rect: Rect2i = lower_layer.get_used_rect()
-	var upper_rect: Rect2i = upper_layer.get_used_rect()
-	var used_rect: Rect2i = lower_rect.merge(upper_rect)
+	var used_rect: Rect2i = lower_layer.get_used_rect()
+	print("DEBUG: used_rect: %s" % used_rect)
 	
 	# 1. Get all empty cells
-	var empty_cells: Dictionary = get_empty_cells(used_rect)
+	var empty_cells: Dictionary = get_empty_cells(used_rect, lower_layer)
 	#print("Found %d empty cells" % empty_cells.size())
 
 	# 2. Define quadrants
@@ -135,23 +134,12 @@ func _generate_entrances(num_entrances: int = NUM_ENTRANCES) -> void:
 		Rect2i(Vector2i(used_rect.position.x, center.y), Vector2i(center.x - used_rect.position.x, used_rect.end.y - center.y)),
 		Rect2i(center, used_rect.end - center)
 	]
+	
+	for i in range(quadrants.size()):
+		print("DEBUG: Quadrant %d: %s" % [i, quadrants[i]])
 
 	# 3. Find all possible locations for a 3x3 entrance in each quadrant
 	var possible_locations_by_quadrant: Dictionary = _get_possible_locations_in_quadrant(empty_cells, quadrants)
 
 	# 4. Place entrances from the list of possible locations
 	place_entrances(possible_locations_by_quadrant, num_entrances)
-	
-
-func _initialize_grids() -> void:
-	get_parent().add_child.call_deferred(actor_grid)
-	get_parent().add_child.call_deferred(event_grid)
-
-func request_move(pawn: Pawn, direction: Vector2i) -> Vector2i:
-	return actor_grid.request_move(pawn, direction)
-
-func request_actor(pawn: Pawn, direction: Vector2i) -> void:
-	actor_grid.request_event(pawn, direction)
-
-func request_event(pawn: Pawn, direction: Vector2i) -> void:
-	event_grid.request_event(pawn, direction)
