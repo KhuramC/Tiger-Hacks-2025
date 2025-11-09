@@ -1,7 +1,8 @@
-[gd_scene load_steps=37 format=3 uid="uid://cainbrrkw014d"]
+[gd_scene load_steps=38 format=3 uid="uid://cainbrrkw014d"]
 
 [ext_resource type="Script" uid="uid://brhhotcc8gfs3" path="res://Scripts/Pawns/Characters/player.gd" id="1_cghlj"]
 [ext_resource type="Texture2D" uid="uid://dej3syime1d4y" path="res://Graphics/Pawns/space_man_sprite.png" id="2_tlhq4"]
+[ext_resource type="Script" uid="uid://cdml4nqeq6ikm" path="res://Scenes/Maps/progress_bar.gd" id="3_338dp"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ajcmp"]
 size = Vector2(16, 27)
@@ -292,3 +293,8 @@ animation = &"idle_down"
 autoplay = "idle_down"
 frame_progress = 0.9000166
 offset = Vector2(0, -8)
+
+[node name="ProgressBar" type="ProgressBar" parent="."]
+offset_right = 4.0
+offset_bottom = 27.0
+script = ExtResource("3_338dp")
