@@ -2,15 +2,27 @@ extends Node2D
 
 @onready var pawns_node: Node2D = $Pawns
 @onready var lower_layer: TileMapLayer = $Lower2
-@onready var tile_map_cell_size: Vector2i = Vector2i(16,16)
+@onready var tile_map_cell_size: Vector2i = Vector2i(16, 16)
+const TILE_SIZE: int = Globals.TILE_SIZE
+var player: CharacterBody2D = null # Reference to the player
 
 
 const ENTRANCE_SCENE: PackedScene = preload("res://Scenes/Pawns/entrance.tscn")
 const UNIQUE_LOCATIONS: Array = [Globals.LOCATION_TYPES.HEADQUARTERS, Globals.LOCATION_TYPES.SPACE_BAR]
-const REUSABLE_LOCATIONS: Array = [Globals.LOCATION_TYPES.SATURN_LIKE] # add gas giant and hot planet later 
+const REUSABLE_LOCATIONS: Array = [Globals.LOCATION_TYPES.SATURN_LIKE] # add gas giant and hot planet later
 const NUM_ENTRANCES: int = 12
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# set camera for player
+	var players = get_tree().get_nodes_in_group("player")
+	if not players.is_empty():
+		player = players[0]
+	var camera: Camera2D = player.get_child(1)
+	var used_rect = lower_layer.get_used_rect()
+	camera.limit_left = used_rect.position.x * TILE_SIZE
+	camera.limit_top = used_rect.position.y * TILE_SIZE
+	camera.limit_right = used_rect.end.x * TILE_SIZE
+	camera.limit_bottom = used_rect.end.y * TILE_SIZE
 	_generate_entrances(NUM_ENTRANCES)
 
 
