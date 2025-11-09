@@ -15,3 +15,13 @@ const location_names = {
 }
 
 static var player_last_galaxy_position: Vector2 = Vector2.ZERO
+
+static var scene_manager = null
+
+static func initialize_scene_manager(root_node, initial_scene, num_scenes):
+	if scene_manager == null:
+		scene_manager = SceneManager.new()
+		root_node.add_child(scene_manager)
+		scene_manager.current_scene = initial_scene
+		scene_manager.loaded_scenes.resize(num_scenes+1)
+		

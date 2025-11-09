@@ -13,6 +13,7 @@ const REUSABLE_LOCATIONS: Array = [Globals.LOCATION_TYPES.SATURN_LIKE] # add gas
 const NUM_ENTRANCES: int = 12
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	Globals.initialize_scene_manager(get_tree().root,self, NUM_ENTRANCES)
 	# set camera for player
 	var players = get_tree().get_nodes_in_group("player")
 	if not players.is_empty():
@@ -27,6 +28,11 @@ func _ready() -> void:
 
 	if Globals.player_last_galaxy_position != Vector2.ZERO:
 		player.global_position = Globals.player_last_galaxy_position
+		Globals.player_last_galaxy_position = Vector2.ZERO
+
+func update_player_position():
+	if player and Globals.player_last_galaxy_position != Vector2.ZERO:
+		player.global_position = Globals.player_last_galaxy_position + Vector2(32,0)
 		Globals.player_last_galaxy_position = Vector2.ZERO
 
 
@@ -112,7 +118,7 @@ func place_entrances(possible_locations_by_quadrant: Dictionary, num_entrances: 
 		# Instantiate and place the entrance
 		var entrance: Area2D = ENTRANCE_SCENE.instantiate()
 		entrance.location_type = location_types[i]
-		# entrance.id = i
+		entrance.id = i + 1
 		entrance.position = (grid_pos * tile_map_cell_size) + (tile_map_cell_size / 2)
 		entrance.z_index = 0
 		add_child(entrance)
