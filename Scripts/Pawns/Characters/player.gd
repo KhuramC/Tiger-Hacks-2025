@@ -45,6 +45,8 @@ const MOVEMENTS: Dictionary = {
 	'ui_down': Vector2i.DOWN
 }
 
+const ATTACK_DAMAGE: int = 20
+
 var input_history: Array[String] = []
 var cur_direction: Vector2i = Vector2i.DOWN
 
@@ -118,6 +120,9 @@ func set_talking(talk_state: bool) -> void:
 
 func _process(_delta) -> void:
 	input_priority()
+	if Input.is_action_just_pressed("ui_attack"):
+			#attempt_attack()
+			return # Attack takes priority over movement/dialogue
 	
 	# Check for attack input (Space key) - can attack while moving
 	if Input.is_action_just_pressed("ui_select"):
@@ -148,6 +153,17 @@ func _process(_delta) -> void:
 				if target_position:
 					move_to(target_position)  # This will set walk animation
 			# If already moving, don't override the walk animation
+
+#func attempt_attack() -> void:
+	## This function asks the Grid to check the cell the player is facing (cur_direction).
+	## If an actor is found there, the Grid will call its damage() function.
+	#var damage_applied: bool = Grid.request_damage(self, cur_direction, ATTACK_DAMAGE)
+	#
+	#if damage_applied:
+		#print("Player attacked and dealt ", ATTACK_DAMAGE, " damage.")
+		## Optionally: Add player attack animation or sound here
+	#else:
+		#print("Player attacked nothing.")
 
 func input_priority() -> void:
 	# Input priority system, prioritize the latest inputs

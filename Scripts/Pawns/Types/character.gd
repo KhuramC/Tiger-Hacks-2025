@@ -19,9 +19,8 @@ func _ready():
 var move_tween: Tween
 var is_moving: bool = false
 var is_talking: bool = false
-
+@onready var Grid: Node2D = get_parent() 
 @onready var chara_skin: Sprite2D = $Skin
-@onready var Grid: Node2D = get_parent()
 
 func heal(amount: int) -> void:
 	health += amount
