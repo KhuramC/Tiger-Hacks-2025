@@ -1,4 +1,4 @@
-[gd_resource type="AnimationLibrary" load_steps=14 format=3]
+[gd_resource type="AnimationLibrary" load_steps=14 format=3 uid="uid://2y1hd8wry5lh"]
 
 [sub_resource type="Animation" id="Animation_RESET"]
 resource_name = "RESET"
@@ -206,17 +206,17 @@ tracks/0/keys = {
 
 [resource]
 _data = {
-"RESET": SubResource("Animation_RESET"),
-"idle_down": SubResource("Animation_idle_down"),
-"idle_left": SubResource("Animation_idle_left"),
-"idle_right": SubResource("Animation_idle_right"),
-"idle_up": SubResource("Animation_idle_up"),
-"walk_down": SubResource("Animation_walk_down"),
-"walk_down_alt": SubResource("Animation_walk_down_alt"),
-"walk_left": SubResource("Animation_walk_left"),
-"walk_left_alt": SubResource("Animation_walk_left_alt"),
-"walk_right": SubResource("Animation_walk_right"),
-"walk_right_alt": SubResource("Animation_walk_right_alt"),
-"walk_up": SubResource("Animation_walk_up"),
-"walk_up_alt": SubResource("Animation_walk_up_alt")
+&"RESET": SubResource("Animation_RESET"),
+&"idle_down": SubResource("Animation_idle_down"),
+&"idle_left": SubResource("Animation_idle_left"),
+&"idle_right": SubResource("Animation_idle_right"),
+&"idle_up": SubResource("Animation_idle_up"),
+&"walk_down": SubResource("Animation_walk_down"),
+&"walk_down_alt": SubResource("Animation_walk_down_alt"),
+&"walk_left": SubResource("Animation_walk_left"),
+&"walk_left_alt": SubResource("Animation_walk_left_alt"),
+&"walk_right": SubResource("Animation_walk_right"),
+&"walk_right_alt": SubResource("Animation_walk_right_alt"),
+&"walk_up": SubResource("Animation_walk_up"),
+&"walk_up_alt": SubResource("Animation_walk_up_alt")
 }

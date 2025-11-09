@@ -37,9 +37,8 @@ func _setup_systems() -> void:
 		gemini_api.error_occurred.connect(_on_gemini_error)
 
 func trigger_event(direction: Vector2i) -> void:
-	if not is_moving:
-		chara_skin.set_animation_direction(-direction) # Face player
-		start_dialogue()
+	chara_skin.set_animation_direction(-direction) # Face player
+	start_dialogue()
 
 func start_dialogue() -> void:
 	set_talking(true)
