@@ -1,6 +1,5 @@
 extends Character
 
-
 @export var move_pattern: Array[Vector2] = []
 var target_position: Vector2
 var is_moving_to_target: bool = false
@@ -15,6 +14,7 @@ var last_attack_time: float = 0.0
 var attack_cooldown: float = 1.0 # Cooldown between attacks in seconds
 
 func _ready():
+	speed = 100
 	add_to_group("enemies")
 	
 	super._ready()
@@ -28,7 +28,7 @@ func _ready():
 
 func _find_player() -> void:
 	# Find the player in the scene tree by group
-	var players = get_tree().get_nodes_in_group("Player")
+	var players = get_tree().get_nodes_in_group("player")
 	if not players.is_empty():
 		player = players[0]
 

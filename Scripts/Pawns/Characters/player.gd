@@ -16,6 +16,7 @@ var hit_enemies_in_swing: Array = []
 
 func _ready():
 	super._ready() # Call parent ready function
+	speed = 200
 	remove_from_group("enemies")
 	
 	# Player-specific ready logic
