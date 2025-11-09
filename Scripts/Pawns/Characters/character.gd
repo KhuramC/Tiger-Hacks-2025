@@ -13,6 +13,7 @@ var last_direction: Vector2 = Vector2.DOWN
 @onready var chara_skin: Sprite2D = $Skin
 
 func _ready():
+	collision_layer = 2
 	update_health_bar()
 
 func _physics_process(delta):
