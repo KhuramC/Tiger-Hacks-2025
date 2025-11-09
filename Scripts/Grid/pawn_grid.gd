@@ -4,7 +4,7 @@ extends TileMapLayer
 enum {EMPTY = -1, ACTOR, OBSTACLE, EVENT}
 
 var pawn_grid: Node
-var pawn_coords: Dictionary[Vector2i, Pawn]
+var pawn_coords: Dictionary[Vector2i, Node2D]  # Can store both Pawn and CharacterBody2D
 
 func _init(grid: Node2D) -> void:
 	_initialize_grid_data(grid)
@@ -26,9 +26,23 @@ func initialize_cells(node_group: String, custom_data: String) -> void:
 
 func initialize_pawns(pawn_type: int) -> void:
 	for child in pawn_grid.get_children():
-		if child.type == pawn_type:
+		# Check if child is a Pawn or has a type property (for CharacterBody2D players)
+		var has_type: bool = false
+		var child_type: int = -1
+		
+		if child is Pawn:
+			has_type = true
+			child_type = child.type
+		else:
+			# Try to get type property (for CharacterBody2D players)
+			var type_value = child.get("type")
+			if type_value != null:
+				has_type = true
+				child_type = type_value
+		
+		if has_type and child_type == pawn_type:
 			var child_map_pos: Vector2i = local_to_map(child.position)
-			set_cell(child_map_pos, child.type, Vector2i.ZERO)
+			set_cell(child_map_pos, child_type, Vector2i.ZERO)
 			pawn_coords[child_map_pos] = child
 
 func get_cell_data(start: Vector2i, direction: Vector2i) -> Dictionary:
@@ -38,11 +52,11 @@ func get_cell_data(start: Vector2i, direction: Vector2i) -> Dictionary:
 	
 	return {'start': cell_start, 'target': cell_target, 'target_type': cell_target_type}
 
-func get_cell_pawn(coordinates: Vector2i) -> Pawn:
+func get_cell_pawn(coordinates: Vector2i) -> Node2D:
 	if pawn_coords.has(coordinates):
-		return pawn_coords[coordinates] # If a Pawn has those coordinates
+		return pawn_coords[coordinates] # If a Pawn/CharacterBody2D has those coordinates
 	
-	return # No Pawn
+	return null  # No Pawn
 
 func update_pawn_pos(pawn_type: int, cell_start: Vector2i, cell_target: Vector2i) -> void:
 	set_cell(cell_target, pawn_type, Vector2i.ZERO)
@@ -52,3 +66,14 @@ func update_pawn_pos(pawn_type: int, cell_start: Vector2i, cell_target: Vector2i
 	if pawn_coords.has(cell_start):
 		pawn_coords[cell_target] = pawn_coords[cell_start]
 		pawn_coords.erase(cell_start)
+
+func remove_pawn(pawn: Node2D) -> void:
+	# Find and remove the pawn from the grid
+	var pawn_pos: Vector2i = local_to_map(pawn.position)
+	
+	# Clear the cell
+	set_cell(pawn_pos, EMPTY, Vector2i.ZERO)
+	
+	# Remove from pawn_coords dictionary
+	if pawn_coords.has(pawn_pos):
+		pawn_coords.erase(pawn_pos)
