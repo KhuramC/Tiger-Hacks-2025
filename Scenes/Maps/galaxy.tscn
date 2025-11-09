@@ -3,13 +3,13 @@
 [ext_resource type="Script" uid="uid://dhj87h58iery" path="res://Scenes/Maps/galaxy.gd" id="1_dmt88"]
 [ext_resource type="Texture2D" uid="uid://dd4o7n2bo12h" path="res://Graphics/Tilesets/tileset_dungeon.png" id="1_uo5tt"]
 [ext_resource type="Script" uid="uid://cdml4nqeq6ikm" path="res://Scenes/Maps/progress_bar.gd" id="3_n2sjt"]
-[ext_resource type="PackedScene" uid="uid://82egl20vpf7n" path="res://Scenes/Pawns/player.tscn" id="4_nyxsb"]
+[ext_resource type="PackedScene" uid="uid://cainbrrkw014d" path="res://Scenes/Pawns/player.tscn" id="4_nyxsb"]
 [ext_resource type="PackedScene" uid="uid://d3xeykecmo176" path="res://Scenes/Pawns/npc_mobile.tscn" id="5_ehxcq"]
-[ext_resource type="Script" path="res://Scripts/Pawns/Types/event.gd" id="7_8j5fh"]
 [ext_resource type="Script" uid="uid://bj8jwjinv8rn8" path="res://Scripts/Pawns/Types/object.gd" id="7_ay8ee"]
 [ext_resource type="PackedScene" uid="uid://dtegylvkm78fs" path="res://Scenes/Pawns/npc.tscn" id="7_wbuet"]
 [ext_resource type="PackedScene" path="res://Scenes/Pawns/barback.tscn" id="8_barback"]
 [ext_resource type="Texture2D" uid="uid://dat1j08ekvs87" path="res://Graphics/Tilesets/space_tileset.png" id="8_n2sjt"]
+[ext_resource type="Script" uid="uid://byslyy5u1x8l4" path="res://Scripts/Pawns/Characters/npc_hostile.gd" id="10_dmt88"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_n2sjt"]
 texture = ExtResource("8_n2sjt")
@@ -2671,19 +2671,20 @@ hframes = 30
 vframes = 16
 frame = 148
 
-[node name="Event" type="Node2D" parent="."]
-position = Vector2(200, 152)
-script = ExtResource("7_8j5fh")
-type = 2
-
-[node name="NPC" parent="." instance=ExtResource("7_wbuet")]
+[node name="Hostile NPC" parent="." instance=ExtResource("7_wbuet")]
 position = Vector2(392, 152)
+collision_layer = 3
+script = ExtResource("10_dmt88")
+move_pattern = Array[Vector2]([])
+detection_range = 80.0
+attack_range = 16.0
+attack_damage = 10
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hostile NPC"]
 position = Vector2(0, -4)
 shape = SubResource("RectangleShape2D_gqevu")
 
-[node name="ProgressBar" type="ProgressBar" parent="NPC"]
+[node name="ProgressBar" type="ProgressBar" parent="Hostile NPC"]
 offset_left = -393.0
 offset_top = -159.0
 offset_right = -389.0
