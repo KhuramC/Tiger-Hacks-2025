@@ -13,3 +13,5 @@ const location_names = {
 	LOCATION_TYPES.SPACE_BAR: "space_bar",
 	LOCATION_TYPES.SATURN_LIKE: "saturn_like"
 }
+
+static var player_last_galaxy_position: Vector2 = Vector2.ZERO

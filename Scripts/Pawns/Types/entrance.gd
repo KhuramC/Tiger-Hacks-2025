@@ -35,6 +35,7 @@ func _on_body_entered(body: CharacterBody2D) -> void:
 	
 	if body.is_in_group("player"):
 		print("SUCCESS: The body was in the 'player' group!")
+		Globals.player_last_galaxy_position = body.global_position
 		
 		match location_type:
 			Globals.LOCATION_TYPES.HEADQUARTERS:

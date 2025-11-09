@@ -25,6 +25,10 @@ func _ready() -> void:
 	camera.limit_bottom = used_rect.end.y * TILE_SIZE
 	_generate_entrances(NUM_ENTRANCES)
 
+	if Globals.player_last_galaxy_position != Vector2.ZERO:
+		player.global_position = Globals.player_last_galaxy_position
+		Globals.player_last_galaxy_position = Vector2.ZERO
+
 
 func _generate_location_types(num_entrances: int = NUM_ENTRANCES) -> Array:
 	var location_types = UNIQUE_LOCATIONS.duplicate()
