@@ -10,6 +10,7 @@ const location_names = Globals.location_names
 const NUM_TILES: int = 5
 
 func _ready() -> void:
+	collision_mask = 2
 	# Connect the body_entered signal to the _on_body_entered function
 	if not body_entered.is_connected(_on_body_entered):
 		body_entered.connect(_on_body_entered)
@@ -28,7 +29,7 @@ func _ready() -> void:
 
 
 # Called when an actor interacts with this entrance
-func _on_body_entered(body: Node2D) -> void:
+func _on_body_entered(body: CharacterBody2D) -> void:
 	# --- THIS IS THE CRITICAL DEBUG LINE ---
 	print("DEBUG: A body named '", body.name, "' just entered the ", location_names[location_type], ".")
 	
@@ -45,9 +46,3 @@ func _on_body_entered(body: Node2D) -> void:
 				print("Taking player to a saturn like planet!")
 	else:
 		print("FAILURE: The body was NOT in the 'player' group.")
-	
-	
-		# --- THIS IS THE NEXT STEP ---
-		# When you are ready and have a "bar_interior.tscn" scene,
-		# you will uncomment the line below to change scenes.
-		# get_tree().change_scene_to_file("res://scenes/levels/bar_interior.tscn")

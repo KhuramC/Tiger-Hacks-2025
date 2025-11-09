@@ -17,7 +17,6 @@ var hit_enemies_in_swing: Array = []
 func _ready():
 	super._ready() # Call parent ready function
 	speed = 200
-	remove_from_group("enemies")
 	
 	# Player-specific ready logic
 	if has_node("HealthBar"):
@@ -86,7 +85,7 @@ func _create_sword_visual() -> void:
 func _create_attack_area_and_timer():
 	attack_area = Area2D.new()
 	attack_area.name = "AttackArea"
-	attack_area.collision_layer = 2 # Player's attack layer
+	attack_area.collision_layer = 0 # Player's attack layer
 	attack_area.collision_mask = 2 # Enemy's body layer
 	attack_area.body_entered.connect(_on_attack_area_body_entered)
 	add_child(attack_area)
