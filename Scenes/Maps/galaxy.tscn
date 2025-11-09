@@ -2642,10 +2642,10 @@ tile_set = SubResource("TileSet_rmhb5")
 position = Vector2(184, 104)
 
 [node name="ProgressBar" type="ProgressBar" parent="Player"]
-offset_left = -1.0
-offset_top = -2.0
-offset_right = 5.0
-offset_bottom = 25.0
+offset_left = -2.0
+offset_top = -5.0
+offset_right = 2.0
+offset_bottom = 22.0
 script = ExtResource("3_n2sjt")
 
 [node name="NPC_Mobile" parent="." instance=ExtResource("5_ehxcq")]
@@ -2679,7 +2679,7 @@ collision_layer = 3
 script = ExtResource("10_dmt88")
 move_pattern = Array[Vector2]([])
 detection_range = 80.0
-attack_range = 16.0
+attack_range = 48.0
 attack_damage = 10
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Hostile NPC"]
