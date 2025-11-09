@@ -114,9 +114,8 @@ func _attack_player() -> void:
 		pass
 
 	# Attack the player
-	if player.has_method("take_damage"):
-		player.take_damage(attack_damage)
-		print(name, " attacked ", player.name, " for ", attack_damage, " damage!")
+	player.take_damage(attack_damage)
+	print(name, " attacked ", player.name, " for ", attack_damage, " damage!")
 
 func wait() -> void:
 	is_stopped = true
