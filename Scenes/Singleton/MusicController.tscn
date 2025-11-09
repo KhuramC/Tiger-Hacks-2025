@@ -1,0 +1,10 @@
+[gd_scene load_steps=2 format=3 uid="uid://bpjm21pupj5hj"]
+
+[ext_resource type="AudioStream" uid="uid://c0uhshm6xylk6" path="res://Resources/Audio/Galactic Lullaby.mp3" id="1_q0qlm"]
+
+[node name="MusicController" type="Node"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("1_q0qlm")
+volume_db = 2.862
+autoplay = true
