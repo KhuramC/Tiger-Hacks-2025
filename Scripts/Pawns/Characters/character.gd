@@ -5,7 +5,7 @@ extends CharacterBody2D
 
 var max_health: int = 100
 var health: int = max_health
-var health_bar: ProgressBar  # Health bar node (can be named "HealthBar" or "ProgressBar")
+@onready var health_bar: ProgressBar = $ProgressBar  # Health bar node (can be named "HealthBar" or "ProgressBar")
 
 var is_talking: bool = false
 var last_direction: Vector2 = Vector2.DOWN
