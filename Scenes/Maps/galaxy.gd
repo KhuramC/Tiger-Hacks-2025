@@ -13,6 +13,7 @@ const REUSABLE_LOCATIONS: Array = [Globals.LOCATION_TYPES.SATURN_LIKE] # add gas
 const NUM_ENTRANCES: int = 12
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	print("galaxy.gd: _ready() called for instance ", self.get_instance_id())
 	Globals.initialize_scene_manager(get_tree().root,self, NUM_ENTRANCES)
 	# set camera for player
 	var players = get_tree().get_nodes_in_group("player")

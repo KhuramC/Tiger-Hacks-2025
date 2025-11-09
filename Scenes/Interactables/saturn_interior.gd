@@ -14,5 +14,5 @@ func _process(delta: float) -> void:
 	pass
 
 func update_player_position():
-	print("In HQ, updating position!")
+	print("In saturn, updating position!")
 	player.global_position = Vector2(135,-65) + Vector2(-32,0)

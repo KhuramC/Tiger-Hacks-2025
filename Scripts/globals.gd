@@ -24,4 +24,7 @@ static func initialize_scene_manager(root_node, initial_scene, num_scenes):
 		root_node.add_child(scene_manager)
 		scene_manager.current_scene = initial_scene
 		scene_manager.loaded_scenes.resize(num_scenes+1)
+		scene_manager.loaded_scenes[0] = initial_scene
+		
+		
 		
