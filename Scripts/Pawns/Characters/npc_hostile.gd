@@ -5,7 +5,7 @@ var target_position: Vector2
 var is_moving_to_target: bool = false
 var current_pattern_index: int = 0
 @export var detection_range: float = 5 * Globals.TILE_SIZE # Detection range in pixels
-@export var attack_range: float = 3 * Globals.TILE_SIZE # Attack range in pixels
+@export var attack_range: float = 0.5 * Globals.TILE_SIZE # Attack range in pixels
 @export var attack_damage: int = 10 # Damage dealt per attack
 
 var is_stopped: bool = false

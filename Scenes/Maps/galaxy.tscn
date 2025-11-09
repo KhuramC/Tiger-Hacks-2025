@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=4 uid="uid://cktlplg0urpum"]
+[gd_scene load_steps=13 format=4 uid="uid://cktlplg0urpum"]
 
 [ext_resource type="Script" uid="uid://dhj87h58iery" path="res://Scenes/Maps/galaxy.gd" id="1_dmt88"]
 [ext_resource type="Texture2D" uid="uid://dd4o7n2bo12h" path="res://Graphics/Tilesets/tileset_dungeon.png" id="1_uo5tt"]
@@ -2622,12 +2622,6 @@ texture = ExtResource("8_n2sjt")
 [sub_resource type="TileSet" id="TileSet_rmhb5"]
 sources/0 = SubResource("TileSetAtlasSource_n2sjt")
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_43fux"]
-size = Vector2(13, 20)
-
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_gqevu"]
-size = Vector2(16, 22)
-
 [node name="Galaxy" type="Node2D"]
 y_sort_enabled = true
 script = ExtResource("1_dmt88")
@@ -2659,10 +2653,6 @@ offset_right = 3.0
 offset_bottom = 20.0
 script = ExtResource("3_n2sjt")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="NPC_Mobile"]
-position = Vector2(-0.5, -5)
-shape = SubResource("RectangleShape2D_43fux")
-
 [node name="Object" type="Node2D" parent="."]
 position = Vector2(200, 120)
 script = ExtResource("7_ay8ee")
@@ -2681,10 +2671,6 @@ move_pattern = Array[Vector2]([])
 detection_range = 80.0
 attack_range = 48.0
 attack_damage = 10
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Hostile NPC"]
-position = Vector2(0, -4)
-shape = SubResource("RectangleShape2D_gqevu")
 
 [node name="ProgressBar" type="ProgressBar" parent="Hostile NPC"]
 offset_left = -1.0

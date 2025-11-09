@@ -137,6 +137,9 @@ func attack() -> void:
 	
 
 func _on_attack_area_body_entered(body):
+	if(body.name == "Player"):
+		# don't hurt player
+		return
 	print("--- Attack area entered by a body! ---")
 	print("Body name: ", body.name)
 	print("Body type: ", body.get_class())

@@ -1,10 +1,13 @@
-[gd_scene load_steps=6 format=3 uid="uid://d3xeykecmo176"]
+[gd_scene load_steps=7 format=3 uid="uid://d3xeykecmo176"]
 
 [ext_resource type="Script" uid="uid://chkssd8xhad5s" path="res://Scripts/Pawns/Characters/npc_mobile.gd" id="1_5n422"]
 [ext_resource type="Texture2D" uid="uid://n4h41o7d7rbs" path="res://Graphics/Pawns/actor_man.png" id="2_n6d4t"]
-[ext_resource type="AnimationLibrary" path="res://Resources/Animations/npc_3x4_anim.tres" id="3_dsqqv"]
+[ext_resource type="AnimationLibrary" uid="uid://2y1hd8wry5lh" path="res://Resources/Animations/npc_3x4_anim.tres" id="3_dsqqv"]
 [ext_resource type="Script" uid="uid://l4teq1kjwlso" path="res://Scripts/Pawns/Characters/character_skin.gd" id="3_ycgmr"]
 [ext_resource type="AnimationNodeBlendTree" uid="uid://c050x5reelfn" path="res://Resources/Animations/base_chara_animtree.tres" id="4_s0lf7"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_bjr6k"]
+size = Vector2(16, 22)
 
 [node name="NPC_Mobile" type="CharacterBody2D"]
 script = ExtResource("1_5n422")
@@ -15,7 +18,6 @@ texture = ExtResource("2_n6d4t")
 offset = Vector2(0, -8)
 hframes = 3
 vframes = 4
-frame = 7
 script = ExtResource("3_ycgmr")
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Skin"]
@@ -33,3 +35,7 @@ parameters/StateMachine/Idle/blend_position = Vector2(0, 1)
 parameters/StateMachine/Walk0/blend_position = Vector2(0, 1)
 parameters/StateMachine/Walk1/blend_position = Vector2(0, 1)
 parameters/TimeScale/scale = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -4)
+shape = SubResource("RectangleShape2D_bjr6k")
