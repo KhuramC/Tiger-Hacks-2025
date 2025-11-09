@@ -60,6 +60,8 @@ func _physics_process(delta):
 
 	# Set velocity based on input
 	velocity = input_direction * speed
+
+
 	
 	if not can_move():
 		velocity = Vector2.ZERO
@@ -70,7 +72,6 @@ func _physics_process(delta):
 	# Handle other inputs like attacking
 	if Input.is_action_just_pressed("ui_select"):
 		attack()
-
 
 func _create_sword_visual() -> void:
 	# Create a Line2D to represent the sword
