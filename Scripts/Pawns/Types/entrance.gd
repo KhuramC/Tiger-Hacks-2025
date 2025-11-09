@@ -38,18 +38,19 @@ func _on_body_entered(body: Node2D) -> void:
 	
 	if body.is_in_group("player"):
 		print("SUCCESS: The body was in the 'player' group!")
-		get_tree().change_scene_to_file("res://Scenes/Interactables/bar_interior.tscn")
-		#match location_type:
-			#Globals.LOCATION_TYPES.HEADQUARTERS:
-				#sprite.texture = load("res://Graphics/Pawns/hq.png")
-			#Globals.LOCATION_TYPES.SPACE_BAR:
-				#sprite.texture = load("res://Graphics/Pawns/bar.png")
-			#Globals.LOCATION_TYPES.GAS_GIANT:
-				#sprite.region_rect = Rect2(240, 240, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
-			#Globals.LOCATION_TYPES.HOT_PLANET:
-				#sprite.region_rect = Rect2(84, 84, NUM_TILES * TILE_SIZE, NUM_TILES * TILE_SIZE)
-			#Globals.LOCATION_TYPES.SATURN_LIKE:
-				#sprite.texture = load("res://Graphics/Pawns/saturn_like.png")
+		
+		match location_type:
+			Globals.LOCATION_TYPES.HEADQUARTERS:
+				print("Taking player to HQ!")
+			Globals.LOCATION_TYPES.SPACE_BAR:
+				print("Taking player to the bar!")
+				get_tree().change_scene_to_file("res://Scenes/Interactables/bar_interior.tscn")
+			Globals.LOCATION_TYPES.GAS_GIANT:
+				print("Taking player to the gas giant!")
+			Globals.LOCATION_TYPES.HOT_PLANET:
+				print("Taking player to a hot planet!!")
+			Globals.LOCATION_TYPES.SATURN_LIKE:
+				print("Taking player to a saturn like planet!")
 	else:
 		print("FAILURE: The body was NOT in the 'player' group.")
 	
