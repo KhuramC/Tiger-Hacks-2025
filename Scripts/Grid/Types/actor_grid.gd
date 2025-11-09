@@ -30,4 +30,13 @@ func request_event(pawn: Node2D, direction: Vector2i) -> void:
 	if cell.target_type == ACTOR:
 		var event_pawn = get_cell_pawn(cell.target)
 		if event_pawn and event_pawn.has_method("trigger_event"):
-			event_pawn.trigger_event(direction)
+			# Check that the actor is actually adjacent (within 1 tile)
+			var pawn_cell: Vector2i = local_to_map(pawn.position)
+			var target_cell: Vector2i = cell.target
+			var cell_diff: Vector2i = target_cell - pawn_cell
+			var distance: int = max(abs(cell_diff.x), abs(cell_diff.y))  # Chebyshev distance
+			
+			# Only trigger if the actor is adjacent (distance of exactly 1 tile)
+			# This ensures we only interact with NPCs directly in front of us
+			if distance == 1:
+				event_pawn.trigger_event(direction)

@@ -44,11 +44,20 @@ func update_health_bar() -> void:
 func die() -> void:
 	print(name, "has died")
 	
+	# Notify bounty manager if this is an enemy
+	_notify_bounty_manager()
+	
 	# Remove from grid system before freeing
 	if Grid and Grid.has_method("remove_pawn_from_grid"):
 		Grid.remove_pawn_from_grid(self)
 	
 	queue_free()  # You can replace this with respawn logic later
+
+func _notify_bounty_manager() -> void:
+	# Notify bounty manager that this enemy has died
+	var bounty_manager = get_tree().root.get_node_or_null("BountyManager")
+	if bounty_manager and bounty_manager.has_method("on_enemy_killed"):
+		bounty_manager.on_enemy_killed(self)
 
 func can_move() -> bool:
 	return not is_moving and not is_talking

@@ -6,6 +6,8 @@ var actor_grid: TileMapLayer = ActorGrid.new(self)
 var event_grid: TileMapLayer = EventGrid.new(self)
 
 func _ready() -> void:
+	# Add to group so bounty manager can find it
+	add_to_group("Grid")
 	_initialize_grids()
 
 func _initialize_grids() -> void:

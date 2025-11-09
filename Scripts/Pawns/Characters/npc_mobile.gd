@@ -10,8 +10,10 @@ var is_stopped: bool = false
 var player: Node2D = null  # Reference to the player
 var last_attack_time: float = 0.0
 var attack_cooldown: float = 0.5  # Cooldown between attacks in seconds
+var is_bounty: bool = false  # Whether this enemy is the current bounty target
 
 @onready var move_max: int = move_pattern.size()
+@onready var bounty_indicator: Node2D = null  # Visual indicator for bounty
 
 func _ready():
 	# This calls the Character.gd's _ready() function, which runs update_health_bar().
@@ -23,6 +25,9 @@ func _ready():
 	
 	# Find the player
 	_find_player()
+	
+	# Create bounty indicator (will be shown if this enemy is the bounty)
+	_create_bounty_indicator()
 
 func _find_player() -> void:
 	# Find the player in the scene
@@ -163,3 +168,31 @@ func trigger_event(direction: Vector2i) -> void:
 	if not is_moving:
 		chara_skin.set_animation_direction(-direction) # Face player
 		print("NPC Mobile")
+
+func set_is_bounty(value: bool) -> void:
+	is_bounty = value
+	_update_bounty_indicator()
+
+func _create_bounty_indicator() -> void:
+	# Create a visual indicator (glowing effect or marker) for bounty targets
+	# For now, we'll use a simple colored overlay
+	bounty_indicator = Node2D.new()
+	bounty_indicator.name = "BountyIndicator"
+	add_child(bounty_indicator)
+	
+	# Create a colored circle or marker above the enemy
+	var marker = Sprite2D.new()
+	var texture = ImageTexture.new()
+	var image = Image.create(16, 16, false, Image.FORMAT_RGBA8)
+	image.fill(Color(1.0, 0.0, 0.0, 0.8))  # Red color for bounty
+	texture.set_image(image)
+	marker.texture = texture
+	marker.position = Vector2(0, -20)  # Above the enemy
+	marker.z_index = 10
+	bounty_indicator.add_child(marker)
+	
+	bounty_indicator.visible = false
+
+func _update_bounty_indicator() -> void:
+	if bounty_indicator:
+		bounty_indicator.visible = is_bounty

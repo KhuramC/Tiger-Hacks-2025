@@ -22,8 +22,24 @@ func show_dialogue(npc_name: String) -> void:
 	response_label.text = "What can I get you?"
 	player_input.text = ""
 	player_input.editable = true
+	player_input.visible = true
 	player_input.grab_focus()
 	is_waiting_for_response = false
+
+func show_message(npc_name: String, message: String, auto_close: bool = false, close_delay: float = 3.0) -> void:
+	# Show a simple message without input field (for bounty messages, etc.)
+	dialogue_panel.show()
+	npc_label.text = npc_name
+	response_label.text = message
+	player_input.text = ""
+	player_input.editable = false
+	player_input.visible = false  # Hide input for message-only dialogues
+	is_waiting_for_response = false
+	
+	if auto_close:
+		# Auto-close after delay
+		await get_tree().create_timer(close_delay).timeout
+		hide_dialogue()
 
 func hide_dialogue() -> void:
 	dialogue_panel.hide()

@@ -12,6 +12,8 @@ enum CELL_TYPES{ ACTOR, OBSTACLE, EVENT }
 var max_health: int = 100
 var health: int = max_health
 var health_bar: ProgressBar  # Health bar node (can be named "HealthBar" or "ProgressBar")
+var points: int = 0  # Player's points/score
+var bounty_manager: Node = null  # Reference to bounty manager
 
 func _ready():
 	# Try to find health bar with either name
@@ -27,6 +29,28 @@ func _ready():
 	
 	# Create sword visual
 	_create_sword_visual()
+	
+	# Find bounty manager
+	_find_bounty_manager()
+	
+	# Connect to bounty manager signals if it exists
+	if bounty_manager:
+		bounty_manager.points_changed.connect(_on_points_changed)
+		bounty_manager.bounty_completed.connect(_on_bounty_completed)
+
+func _find_bounty_manager() -> void:
+	bounty_manager = get_tree().root.get_node_or_null("BountyManager")
+	if not bounty_manager:
+		# Try to find it after a delay (it might be created later)
+		await get_tree().create_timer(0.5).timeout
+		bounty_manager = get_tree().root.get_node_or_null("BountyManager")
+
+func _on_points_changed(new_points: int) -> void:
+	points = new_points
+	print("Player points updated: ", points)
+
+func _on_bounty_completed() -> void:
+	print("Bounty completed! New bounty will be assigned.")
 
 var move_tween: Tween
 var is_moving: bool = false
