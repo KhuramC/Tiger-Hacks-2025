@@ -26,7 +26,7 @@ func request_move(pawn: Node2D, direction: Vector2i) -> Vector2i:
 
 func request_event(pawn: Node2D, direction: Vector2i) -> void:
 	var cell: Dictionary = get_cell_data(pawn.position, direction)
-	
+
 	if cell.target_type == ACTOR:
 		var event_pawn = get_cell_pawn(cell.target)
 		if event_pawn and event_pawn.has_method("trigger_event"):

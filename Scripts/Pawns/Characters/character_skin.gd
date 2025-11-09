@@ -3,7 +3,7 @@ extends Sprite2D
 var switch_walk: bool = false
 
 @onready var animation_tree: AnimationTree = $AnimationTree
-@onready var walk_length: float = $AnimationPlayer.get_animation("Walk_down").length
+@onready var walk_length: float = $AnimationPlayer.get_animation_library("").get_animation("walk_down").length
 
 func _ready() -> void:
 	# Ensure AnimationTree is active
