@@ -39,10 +39,12 @@ func _on_body_entered(body: CharacterBody2D) -> void:
 		match location_type:
 			Globals.LOCATION_TYPES.HEADQUARTERS:
 				print("Taking player to HQ!")
+				get_tree().change_scene_to_file("res://Scenes/Interactables/hq_interior.tscn")
 			Globals.LOCATION_TYPES.SPACE_BAR:
 				print("Taking player to the bar!")
 				get_tree().change_scene_to_file("res://Scenes/Interactables/bar_interior.tscn")
 			Globals.LOCATION_TYPES.SATURN_LIKE:
 				print("Taking player to a saturn like planet!")
+				get_tree().change_scene_to_file("res://Scenes/Interactables/saturn_interior.tscn")
 	else:
 		print("FAILURE: The body was NOT in the 'player' group.")
