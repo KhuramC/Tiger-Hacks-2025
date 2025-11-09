@@ -1,9 +1,6 @@
 class_name Character
 extends CharacterBody2D
 
-enum CELL_TYPES {ACTOR, OBSTACLE, EVENT}
-@export var type: CELL_TYPES = CELL_TYPES.ACTOR
-
 @export var speed: float = 300.0
 
 var max_health: int = 100

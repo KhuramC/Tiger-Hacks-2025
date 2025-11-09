@@ -5,17 +5,20 @@ extends Character
 var target_position: Vector2
 var is_moving_to_target: bool = false
 var current_pattern_index: int = 0
-@export var detection_range: float = 5*Globals.TILE_SIZE # Detection range in pixels
-@export var attack_range: float = 1*Globals.TILE_SIZE    # Attack range in pixels
-@export var attack_damage: int = 10       # Damage dealt per attack
+@export var detection_range: float = 5 * Globals.TILE_SIZE # Detection range in pixels
+@export var attack_range: float = 1 * Globals.TILE_SIZE # Attack range in pixels
+@export var attack_damage: int = 10 # Damage dealt per attack
 
 var is_stopped: bool = false
-var player: Node2D = null # Reference to the player
+var player: CharacterBody2D = null # Reference to the player
 var last_attack_time: float = 0.0
 var attack_cooldown: float = 1.0 # Cooldown between attacks in seconds
 
 func _ready():
+	add_to_group("enemies")
+	
 	super._ready()
+	collision_layer = 2
 	# Find the player node. Assumes the player is in the "Player" group.
 	_find_player()
 	
@@ -76,7 +79,11 @@ func _physics_process(delta):
 		else:
 			velocity = Vector2.ZERO # No patrol pattern, so idle
 
-	super._physics_process(delta)
+	if not can_move():
+		velocity = Vector2.ZERO
+	
+	move_and_slide()
+	_update_animation()
 
 func wait_and_continue_patrol():
 	is_stopped = true
@@ -116,6 +123,5 @@ func wait() -> void:
 	get_tree().create_timer(1.0).timeout.connect(func(): is_stopped = false)
 
 func trigger_event(direction: Vector2) -> void:
-	if not is_moving:
-		last_direction = -direction # Face player
-		print("NPC Mobile triggered event")
+	last_direction = - direction # Face player
+	print("NPC Mobile triggered event")

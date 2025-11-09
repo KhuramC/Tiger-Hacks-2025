@@ -7,9 +7,16 @@ extends Character
 
 var sword_visual: Line2D # Visual sword that appears during attack
 var attack_tween: Tween
+var attack_shape_node = CollisionShape2D.new()
+
+var attack_area: Area2D
+var attack_timer: Timer
+var hit_enemies_in_swing: Array = []
+
 
 func _ready():
 	super._ready() # Call parent ready function
+	remove_from_group("enemies")
 	
 	# Player-specific ready logic
 	if has_node("HealthBar"):
@@ -21,25 +28,7 @@ func _ready():
 		update_health_bar()
 	
 	_create_sword_visual()
-
-func _physics_process(delta):
-	# Get player input vector
-	var input_direction = Vector2.ZERO
-	if can_move():
-		input_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
-
-	# Set velocity based on input
-	velocity = input_direction * speed
-	
-	if not can_move():
-		velocity = Vector2.ZERO
-	
-	move_and_slide()
-	_update_animation()
-
-	# Handle other inputs like attacking
-	if Input.is_action_just_pressed("ui_select"):
-		attack()
+	_create_attack_area_and_timer()
 
 # Override the parent's animation update to use AnimatedSprite2D
 func _update_animation():
@@ -60,8 +49,27 @@ func _update_animation():
 		if dot_product > max_dot:
 			max_dot = dot_product
 			direction_name = dir_name
-			
 	animated_sprite.play(anim_prefix + "_" + direction_name)
+
+
+func _physics_process(delta):
+	# Get player input vector
+	var input_direction = Vector2.ZERO
+	if can_move():
+		input_direction = Input.get_vector("ui_left", "ui_right", "ui_up", "ui_down")
+
+	# Set velocity based on input
+	velocity = input_direction * speed
+	
+	if not can_move():
+		velocity = Vector2.ZERO
+	
+	move_and_slide()
+	_update_animation()
+
+	# Handle other inputs like attacking
+	if Input.is_action_just_pressed("ui_select"):
+		attack()
 
 
 func _create_sword_visual() -> void:
@@ -73,14 +81,78 @@ func _create_sword_visual() -> void:
 	sword_visual.z_index = 10 # Make sure it appears above other sprites
 	add_child(sword_visual)
 
-func attack() -> void:
-	# Show sword swing animation
-	_show_sword_swing_animation()
-	
-	# The old grid-based attack logic is removed.
-	# New logic using Area2D or RayCast2D would go here.
-	print("Player attacks!")
 
+func _create_attack_area_and_timer():
+	attack_area = Area2D.new()
+	attack_area.name = "AttackArea"
+	attack_area.collision_layer = 2 # Player's attack layer
+	attack_area.collision_mask = 2 # Enemy's body layer
+	attack_area.body_entered.connect(_on_attack_area_body_entered)
+	add_child(attack_area)
+
+	var shape = RectangleShape2D.new()
+	shape.size = Vector2(32, 48) # Hitbox for the attack
+	attack_shape_node.shape = shape
+	attack_shape_node.position = Vector2(32, 0) # Position in front of the player
+	attack_area.add_child(attack_shape_node)
+	
+	attack_timer = Timer.new()
+	attack_timer.name = "AttackTimer"
+	attack_timer.wait_time = 0.3
+	attack_timer.one_shot = true
+	attack_timer.timeout.connect(func():
+		var shape_node = attack_shape_node
+		if shape_node:
+			shape_node.disabled = true
+	)
+	add_child(attack_timer)
+
+	attack_shape_node.disabled = true
+
+
+func attack() -> void:
+	if not attack_timer.is_stopped():
+		return # Already attacking
+
+	hit_enemies_in_swing.clear()
+	_show_sword_swing_animation()
+
+	attack_area.rotation = last_direction.angle()
+
+	if attack_shape_node:
+		attack_shape_node.disabled = false
+	
+
+	attack_timer.start()
+
+	# Use a short timer to wait for the physics engine to update.
+	# This ensures get_overlapping_bodies() is accurate.
+	get_tree().create_timer(0.05).timeout.connect(func():
+		var bodies = attack_area.get_overlapping_bodies()
+		print("Overlapping bodies:", bodies)
+		for body in bodies:
+			_on_attack_area_body_entered(body)
+	)
+	
+
+func _on_attack_area_body_entered(body):
+	print("--- Attack area entered by a body! ---")
+	print("Body name: ", body.name)
+	print("Body type: ", body.get_class())
+	print("Body collision layer: ", body.collision_layer)
+	print("Body collision mask: ", body.collision_mask)
+	
+	if body.has_method("take_damage"):
+		print("Body has 'take_damage' method.")
+		if not body in hit_enemies_in_swing:
+			print("Hit: ", body.name)
+			hit_enemies_in_swing.append(body)
+			body.take_damage(attack_damage)
+		else:
+			print("Body already hit in this swing.")
+	else:
+		print("Body does NOT have 'take_damage' method.")
+	print("------------------------------------")
 
 func _show_sword_swing_animation() -> void:
 	if attack_tween and attack_tween.is_running():
@@ -109,4 +181,3 @@ func _show_sword_swing_animation() -> void:
 	attack_tween = create_tween()
 	attack_tween.tween_property(sword_visual, "rotation", rotation_end, 0.2).set_trans(Tween.TRANS_CUBIC).set_ease(Tween.EASE_OUT)
 	attack_tween.tween_callback(func(): sword_visual.visible = false)
-	attack_tween.start()
