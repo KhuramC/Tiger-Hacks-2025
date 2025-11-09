@@ -4,21 +4,37 @@ extends CharacterBody2D
 enum CELL_TYPES {ACTOR, OBSTACLE, EVENT}
 @export var type: CELL_TYPES = CELL_TYPES.ACTOR
 
-@export var speed: float = 300
-@export var move_duration: float = 0.2  # Duration in seconds to move one tile
+@export var speed: float = 300.0
 
 var max_health: int = 100
 var health: int = max_health
 var health_bar: ProgressBar  # Health bar node (can be named "HealthBar" or "ProgressBar")
 
-var move_tween: Tween
-var is_moving: bool = false
 var is_talking: bool = false
+var last_direction: Vector2 = Vector2.DOWN
 
 @onready var chara_skin: Sprite2D = $Skin
 
 func _ready():
 	update_health_bar()
+
+func _physics_process(delta):
+	# Child classes should set the 'velocity' vector based on their logic (e.g., player input or AI).
+	# This base function then handles movement, collision, and animation.
+	if not can_move():
+		velocity = Vector2.ZERO
+	
+	move_and_slide()
+	_update_animation()
+
+func _update_animation():
+	if velocity.length() > 0:
+		last_direction = velocity.normalized()
+		chara_skin.play_walk_animation()
+		chara_skin.set_animation_direction(last_direction)
+	else:
+		chara_skin.play_idle_animation()
+		chara_skin.set_animation_direction(last_direction) # Keep facing the last direction when idle
 
 func heal(amount: int) -> void:
 	health += amount
@@ -43,24 +59,7 @@ func die() -> void:
 	queue_free() # You can replace this with respawn logic later
 
 func can_move() -> bool:
-	return not is_moving and not is_talking
-
-func move_to(target_position: Vector2) -> void:
-	# Use a reasonable fixed animation speed (lower = slower animation)
-	chara_skin.set_animation_speed(0.5)  # Slower animation speed to prevent fast cycling
-	chara_skin.play_walk_animation()
-	
-	move_tween = create_tween()
-	move_tween.connect("finished", _move_tween_done)
-	move_tween.tween_property(self, "position", target_position, move_duration)
-	is_moving = true
-
-func _move_tween_done() -> void:
-	move_tween.kill()
-	chara_skin.toggle_walk_side()
-	chara_skin.play_idle_animation()
-	chara_skin.set_animation_speed(1.0)  # Reset animation speed to normal
-	is_moving = false
+	return not is_talking
 
 func set_talking(talk_state: bool) -> void:
 	is_talking = talk_state
