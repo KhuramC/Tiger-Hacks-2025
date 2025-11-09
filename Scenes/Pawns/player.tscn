@@ -274,6 +274,10 @@ animations = [{
 }]
 
 [node name="Player" type="CharacterBody2D"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tlhq4"]
+size = Vector2(22, 30)
+
+[node name="Astronaut" type="CharacterBody2D" groups=["player"]]
 script = ExtResource("1_cghlj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
@@ -288,3 +292,17 @@ animation = &"idle_down"
 autoplay = "idle_down"
 frame_progress = 0.9000166
 offset = Vector2(0, -8)
+[node name="AnimationTree" type="AnimationTree" parent="Skin"]
+root_node = NodePath("../..")
+tree_root = ExtResource("4_5pnro")
+anim_player = NodePath("../AnimationPlayer")
+parameters/StateMachine/Idle/blend_position = Vector2(0, 1)
+parameters/StateMachine/Walk0/blend_position = Vector2(0, 1)
+parameters/StateMachine/Walk1/blend_position = Vector2(0, 1)
+parameters/TimeScale/scale = 1.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -1)
+shape = SubResource("RectangleShape2D_tlhq4")
+
+[node name="Camera2D" type="Camera2D" parent="."]
