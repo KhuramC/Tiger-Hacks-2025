@@ -1,6 +1,9 @@
 class_name Character
 extends CharacterBody2D
 
+@onready var death_screen_scene = preload("res://Scenes/UI/death_screen.tscn")
+var death_screen = null
+
 @export var speed: float = 100.0
 
 var max_health: int = 100
@@ -53,8 +56,38 @@ func update_health_bar() -> void:
 		health_bar.set_health(health, max_health)
 
 func die() -> void:
-	print(name, "has died")
-	queue_free() # You can replace this with respawn logic later
+	if is_in_group("player"):
+		velocity = Vector2.ZERO
+		
+		if not death_screen:
+			death_screen = death_screen_scene.instantiate()
+			death_screen.restart_game.connect(_on_death_screen_restart)
+			
+			var canvas_layer: CanvasLayer
+			var root = get_tree().root.get_node("/root")
+			
+			var existing_canvas = root.get_node_or_null("UILayer")
+			if existing_canvas and existing_canvas is CanvasLayer:
+				canvas_layer = existing_canvas
+			else:
+				canvas_layer = CanvasLayer.new()
+				canvas_layer.name = "UILayer"
+				canvas_layer.layer = 100 # Ensure it's on top
+				canvas_layer.process_mode = Node.PROCESS_MODE_ALWAYS
+				root.add_child(canvas_layer)
+				
+			canvas_layer.add_child(death_screen)
+			
+		death_screen.show_death_screen()
+		process_mode = Node.PROCESS_MODE_DISABLED
+	else:
+		queue_free()
+			
+func _on_death_screen_restart():
+	process_mode = Node.PROCESS_MODE_INHERIT
+	health = max_health
+	update_health_bar()
+	global_position = Vector2.ZERO
 
 func can_move() -> bool:
 	return not is_talking
